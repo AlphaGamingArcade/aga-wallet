@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "868418200325",
+    "project_id": "aga-wallet-759c8",
+    "storage_bucket": "aga-wallet-759c8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868418200325:android:1b0fb7c0cea822de414d6c",
+        "android_client_info": {
+          "package_name": "com.jayagaglobal2.agawallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5cw_ilIS7z91gYYSq9zMTR0JWwUuLeAc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
