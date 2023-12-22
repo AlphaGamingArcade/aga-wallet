@@ -1,5 +1,13 @@
 import React, { useRef } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import profileIcon from '../../assets/profile-icon.png';
 import notificationIcon from '../../assets/notification-icon.png';
 import Games from '../../components/Games';
@@ -20,38 +28,41 @@ export default function HomeTab({ navigation }) {
   const userContext = useUser();
   const walletsContext = useWallets();
   const tokenContext = useToken();
-  const token = tokenContext?.token ?? ''
+  const token = tokenContext?.token ?? '';
 
   const [refreshing, setRefreshing] = React.useState(false);
-  
-  const onRefresh = React.useCallback(async (userId) => {
-    if (userId) {
-      setRefreshing(true);
-      try {
-        const res = await genericGetRequest(`users/${userId}`, tokenContext?.token ?? '');
-        const keys = ['@AgaWallet_USER', '@AgaWallet_WALLETS'];
-        await AsyncStorage.multiRemove(keys);
-  
-        const userData = res?.user ?? {};
-        const walletsData = res?.wallets ?? [];
-  
-        const user = ['@AgaWallet_USER', JSON.stringify(userData)];
-        const wallets = ['@AgaWallet_WALLETS', JSON.stringify(walletsData)];
-  
-        await AsyncStorage.multiSet([user, wallets]);
-  
-        userContext.updateUser(userData);
-        walletsContext.updateWallets(walletsData);
-        if (walletsData?.length > 0) {
-          walletsContext?.updateSelectedWallet(walletsData[0]);
+
+  const onRefresh = React.useCallback(
+    async (userId) => {
+      if (userId) {
+        setRefreshing(true);
+        try {
+          const res = await genericGetRequest(`users/${userId}`, tokenContext?.token ?? '');
+          const keys = ['@AgaWallet_USER', '@AgaWallet_WALLETS'];
+          await AsyncStorage.multiRemove(keys);
+
+          const userData = res?.user ?? {};
+          const walletsData = res?.wallets ?? [];
+
+          const user = ['@AgaWallet_USER', JSON.stringify(userData)];
+          const wallets = ['@AgaWallet_WALLETS', JSON.stringify(walletsData)];
+
+          await AsyncStorage.multiSet([user, wallets]);
+
+          userContext.updateUser(userData);
+          walletsContext.updateWallets(walletsData);
+          if (walletsData?.length > 0) {
+            walletsContext?.updateSelectedWallet(walletsData[0]);
+          }
+        } catch (error) {
+          console.log('Error', error, error?.response?.data);
+        } finally {
+          setRefreshing(false);
         }
-      } catch (error) {
-        console.log('Error', error, error?.response?.data);
-      } finally {
-        setRefreshing(false);
       }
-    }
-  }, [token]);
+    },
+    [token]
+  );
 
   const onPressNotification = () => {
     navigation.navigate('notification');
@@ -64,7 +75,7 @@ export default function HomeTab({ navigation }) {
 
   const onPressClose = () => {
     openDrawerRef.current?.close();
-  }
+  };
 
   return (
     <ScrollView
@@ -72,13 +83,16 @@ export default function HomeTab({ navigation }) {
       showsVerticalScrollIndicator={false}
       style={styles.scrollView}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={() => onRefresh(userContext?.user?.id ?? '')} />
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => onRefresh(userContext?.user?.id ?? '')}
+        />
       }
       contentContainerStyle={styles.container}
     >
       <View style={styles.drawerContainer}>
         <Drawer ref={openDrawerRef}>
-          <ProfileDrawer navigation={navigation} onClose={onPressClose}/>
+          <ProfileDrawer navigation={navigation} onClose={onPressClose} />
         </Drawer>
       </View>
       <View style={styles.topNav}>

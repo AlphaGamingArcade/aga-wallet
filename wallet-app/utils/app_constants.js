@@ -53,4 +53,4 @@ export const OPTION_TYPE = {
   SEND: 'send',
   RECEIVE: 'receive',
   UPDATE: 'update',
-}
+};

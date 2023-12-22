@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   balanceTextContainer: {
     paddingRight: 15,
-    maxWidth: '95%'
+    maxWidth: '95%',
   },
   valueBalanceText: {
     fontSize: FONT_SIZE.EXTRA_LARGE - 2,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   carretContainer: {
-    flex: 1
+    flex: 1,
   },
   carretDownIcon: {
     height: 8,

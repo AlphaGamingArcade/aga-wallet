@@ -33,6 +33,8 @@ export default function NotificationScreen({ navigation }) {
       >
         <Notification />
         <Notification />
+        <Notification />
+        <Notification />
       </ScrollView>
     </SafeAreaView>
   );
