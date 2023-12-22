@@ -54,7 +54,7 @@ export default function HomeTab({ navigation }) {
   }, [token]);
 
   const onPressNotification = () => {
-    navigation.navigate('signin');
+    navigation.navigate('notification');
   };
 
   const openDrawerRef = useRef(null);

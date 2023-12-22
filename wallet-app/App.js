@@ -24,6 +24,7 @@ import { TokenContextProvider } from './services/store/token/tokenContext';
 import io from 'socket.io-client';
 import CustomDrawer from './components/CustomDrawer';
 import ProfileDrawer from './components/ProfileDrawer';
+import NotificationScreen from './screens/notification-screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -78,7 +79,7 @@ export default function App() {
   }, [expoPushToken]);
 
   useEffect(() => {
-    const socket = io('http://192.168.8.121:9091/blockchain', {
+    const socket = io('http://192.168.8.100:9091/blockchain', {
       transports: ['websocket'],
     });
 
@@ -127,6 +128,7 @@ export default function App() {
                   <Stack.Screen name="send-status" component={SendStatusScreen} />
                   <Stack.Screen name="send-amount" component={SendAmountScreen} />
                   <Stack.Screen name="index" component={IndexScreen} />
+                  <Stack.Screen name="notification" component={NotificationScreen} />
                 </Stack.Navigator>
                 <StatusBar style="auto" />
               </NavigationContainer>
