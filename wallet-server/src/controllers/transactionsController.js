@@ -17,7 +17,7 @@ module.exports = class TransactionController {
             receiver_address: receiverAddress,
             amount,
         } = req.body
-
+        
         try {
             const isSenderAddressExists =
                 await sqlFunction.isWalletAddressExists(senderAddress)

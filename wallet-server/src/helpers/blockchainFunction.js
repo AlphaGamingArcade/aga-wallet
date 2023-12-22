@@ -17,7 +17,7 @@ module.exports = class {
     static sendTransaction = async (payload) => {
         try {
             const res = await axios.post(
-                `${process.env.BLOCKCHAIN_URL}/transactions/send`,
+                `${process.env.BLOCKCHAIN_URL}/transactions`,
                 payload
             )
 
