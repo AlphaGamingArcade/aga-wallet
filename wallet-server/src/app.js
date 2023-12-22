@@ -63,7 +63,7 @@ io.of('/blockchain').on('connection', (socket) => {
     })
 })
 
-server.listen(process.env.PORT, "192.168.8.100", async () => {
+server.listen(process.env.PORT, process.env.IP, async () => {
     console.clear()
     console.log(`Listen at port`, process.env.PORT)
 })
