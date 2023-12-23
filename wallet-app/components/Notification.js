@@ -1,10 +1,21 @@
 import { useState, useRef } from 'react';
-import { View, StyleSheet, Image, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Modal,
+  TurboModuleRegistry,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import ReceiveIcon from '../assets/receive-icon-white.png';
 import UpdatesIcon from '../assets/notification-icon-white.png';
 import SendIcon from '../assets/send-icon-white.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE, OPTION_TYPE } from '../utils/app_constants';
+import NotificationModal from './NotificationModal';
 
 const notificationInfo = {
   receive: {
@@ -21,7 +32,10 @@ const notificationInfo = {
 export default function Notification() {
   const option = OPTION_TYPE.RECEIVE;
 
-  const handleClick = () => {};
+  const openModal = useRef(null);
+  const handleClick = () => {
+    openModal?.current?.open();
+  };
 
   return (
     <View style={styles.container}>
@@ -42,6 +56,21 @@ export default function Notification() {
       <TouchableOpacity onPress={handleClick}>
         <Text style={styles.notificationButtonText}>...</Text>
       </TouchableOpacity>
+      <View style={styles.notificationModal}>
+        <NotificationModal 
+        ref={openModal}
+        >
+          
+            <Text style={styles.modalHeaderText}>Recieved Money</Text>
+            <Text style={styles.modalDateText}>December 18, 2023 3:47 PM </Text>
+            <Text style={styles.modalContentText}>
+              You have received a $1000 deposit from John Doe. Your new account balance is $50,000
+              as of 12-18-23 at 3:47 PM. Transaction Number: 1234345. Thank you for using our
+              services!
+            </Text>
+          
+        </NotificationModal>
+      </View>
     </View>
   );
 }
@@ -101,8 +130,29 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY.POPPINS_REGULAR,
     fontSize: FONT_SIZE.REGULAR,
   },
-  scrollViewContent: {
-    flexGrow: 1,
-    justifyContent: 'flex-end',
+  notificationContent: {
+    flex: 1,
+    position: 'absolute',
+    backgroundColor: 'red',
   },
+  notificationModal: {
+    position: 'absolute',
+  },
+  modalHeaderText:{
+    color:COLORS.PRIMARY,
+    fontFamily:FONT_FAMILY.POPPINS_SEMI_BOLD,
+    fontSize:FONT_SIZE.LARGE
+  },
+  modalDateText:{
+    fontFamily:FONT_FAMILY.POPPINS_LIGHT,
+    fontSize:FONT_SIZE.REGULAR
+  },
+  modalContentText:{
+    fontFamily:FONT_FAMILY.POPPINS_REGULAR,
+    fontSize:FONT_SIZE.REGULAR,
+    textAlign:'justify',
+    lineHeight:23,
+    marginTop:20
+  }
+
 });
