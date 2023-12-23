@@ -14,14 +14,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ReceiveIcon from '../assets/receive-icon-white.png';
 import UpdatesIcon from '../assets/notification-icon-white.png';
 import SendIcon from '../assets/send-icon-white.png';
-import DeleteIcon from '../assets/delete-icon.png'
+import DeleteIcon from '../assets/delete-icon.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE, OPTION_TYPE } from '../utils/app_constants';
 import NotificationModal from './NotificationModal';
+import TestingModal from './Modal';
 
 const notificationInfo = {
   receive: {
     notificationImg: ReceiveIcon,
-   
   },
   send: {
     notificationImg: SendIcon,
@@ -61,7 +61,7 @@ export default function Notification() {
           </View>
         </View>
         <TouchableOpacity>
-          <Image source={DeleteIcon} style={styles.deleteIcon}/>
+          <Image source={DeleteIcon} style={styles.deleteIcon} />
         </TouchableOpacity>
         <View style={styles.notificationModal}>
           <NotificationModal ref={openModal}>
@@ -71,7 +71,6 @@ export default function Notification() {
               You have received a $1000 deposit from John Doe. Your new account balance is $50,000
               as of 12-18-23 at 3:47 PM. Transaction Number: 1234345. Thank you for using our
               services!
-              {/* You have sent a $1000 deposit to John Doe. Your new account balance is $50,000 as of 12-18-23 at 3:47 PM. Transaction Number: 1234345. */}
             </Text>
             <TouchableOpacity onPress={clickCloseModal} style={styles.closeModalButton}>
               <Text style={styles.closeText}>Close</Text>
@@ -129,10 +128,10 @@ const styles = StyleSheet.create({
     color: COLORS.DARK_GRAY,
     fontSize: FONT_SIZE.SMALL,
   },
-  deleteIcon:{
-    width:25,
-    height:25,
-    marginRight:5
+  deleteIcon: {
+    width: 25,
+    height: 25,
+    marginRight: 5,
   },
   notificationMessegeAll: {
     fontFamily: FONT_FAMILY.POPPINS_REGULAR,
@@ -179,3 +178,7 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
   },
 });
+
+{
+  /* You have sent a $1000 deposit to John Doe. Your new account balance is $50,000 as of 12-18-23 at 3:47 PM. Transaction Number: 1234345. */
+}

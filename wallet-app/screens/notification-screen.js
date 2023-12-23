@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -11,12 +11,22 @@ import {
 import BackIcon from '../assets/arrow-left-v2.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE } from '../utils/app_constants';
 import Notification from '../components/Notification';
+import { genericGetRequest } from '../services/api/genericGetRequest';
 
 export default function NotificationScreen({ navigation }) {
   const backButtonHandler = () => {
     navigation.goBack();
   };
-
+  const fetchData = async () => {
+    try {
+      const data = await genericGetRequest('users/notification');
+    } catch (error) {
+      console.log(error, ' heree');
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -31,9 +41,6 @@ export default function NotificationScreen({ navigation }) {
         style={styles.mainContainer}
         showsVerticalScrollIndicator={false}
       >
-        <Notification />
-        <Notification />
-        <Notification />
         <Notification />
       </ScrollView>
     </SafeAreaView>

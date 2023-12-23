@@ -11,19 +11,40 @@ import {
 
 const NotificationModal = forwardRef(function NotificationModal(props, ref) {
   const [visible, setVisible] = useState(false);
-  const scaleValue = useRef(new Animated.Value(0)).current;
+  const opacityValue = useRef(new Animated.Value(0)).current;
+  const scaleValue = useRef(new Animated.Value(0.8)).current; // Start with a scale less than 1
 
   const openModal = () => {
     setVisible(true);
-    Animated.spring(scaleValue, {
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
+    Animated.parallel([
+      Animated.timing(opacityValue, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleValue, {
+        toValue: 1,
+        friction: 4,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
   const closeModal = () => {
-    setVisible(false);
-    scaleValue.setValue(0);
+    Animated.parallel([
+      Animated.timing(opacityValue, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleValue, {
+        toValue: 0.8,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setVisible(false);
+    });
   };
 
   useImperativeHandle(
@@ -36,11 +57,18 @@ const NotificationModal = forwardRef(function NotificationModal(props, ref) {
   );
 
   const animatedStyle = {
+    opacity: opacityValue,
     transform: [{ scale: scaleValue }],
   };
 
   return (
-    <Modal transparent visible={visible} statusBarTranslucent onRequestClose={closeModal}>
+    <Modal
+      transparent
+      visible={visible}
+      statusBarTranslucent
+      onRequestClose={closeModal}
+      animationType="fade"
+    >
       <SafeAreaView style={styles.container}>
         <TouchableWithoutFeedback onPress={closeModal}>
           <View style={styles.backDrop} />
@@ -64,12 +92,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+
   notificationModal: {
     alignSelf: 'center',
     backgroundColor: '#FFF',
     width: '90%',
-    height: 'auto',
+    maxHeight: '80%',
     borderRadius: 5,
+    overflow: 'hidden',
   },
   content: {
     padding: 20,
