@@ -1,17 +1,11 @@
-import { Platform } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoadingScreen from './screens/loading';
 import { useFonts } from 'expo-font';
 import { NetworkAssetContextProvider } from './services/store/networkAssets/networkAssetsContext';
-import { usePushNotifications } from './hooks/usePushNotification';
-import { useEffect, useState } from 'react';
-import { genericPostRequest } from './services/api/genericPostRequest';
 import * as Notifications from 'expo-notifications';
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { WalletsContextProvider } from './services/store/wallets/walletsContext';
 import { UserContextProvider } from './services/store/user/userContext';
 import { SendAssetContextProvider } from './services/store/sendAsset/sendAssetContext';
-import { AuthContextProvider, useAuth } from './services/store/auth/AuthContext';
+import { AuthContextProvider } from './services/store/auth/AuthContext';
 import MainNavigation from './navigations/MainNavigation';
 
 Notifications.setNotificationHandler({

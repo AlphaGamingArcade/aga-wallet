@@ -13,12 +13,6 @@ import SendAssetScreen from '../screens/send-asset';
 import SendStatusScreen from '../screens/send-status';
 import SendAmountScreen from '../screens/send-amount';
 
-Notifications.setNotificationHandler({
-  shouldPlaySound: true,
-  shouldShowAlert: true,
-  shouldShowBadge: true,
-});
-
 const MainStack = createNativeStackNavigator();
 
 export default function MainNavigation() {
@@ -48,47 +42,3 @@ export default function MainNavigation() {
     </NavigationContainer>
   );
 }
-
-// const { expoPushToken } = usePushNotifications();
-// const [user, setUser] = useState(null);
-// const [isAppReady, setIsAppReady] = useState(false);
-// const [hasConnection, setConnection] = useState(false);
-
-// const saveUserPushNotifToken = async (pushToken) => {
-//   if (user?.id) {
-//     try {
-//       await genericPostRequest('push-notifications/register', {
-//         user_id: user.id,
-//         push_notification_token: pushToken,
-//         platform: Platform.OS,
-//       });
-//       console.log('Registered for push notifications');
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   }
-// };
-
-// useEffect(() => {
-//   if (expoPushToken) {
-//     saveUserPushNotifToken(expoPushToken);
-//   }
-// }, [expoPushToken]);
-
-// useEffect(() => {
-//   const socket = io(process.env.EXPO_PUBLIC_SOCKET_URL, {
-//     transports: ['websocket'],
-//   });
-
-//   socket.io.on('open', () => setConnection(true));
-//   socket.io.on('close', () => setConnection(false));
-
-//   if (user?.id) {
-//     socket.emit('setUserID', { userID: user?.id ?? '' });
-//   }
-
-//   return () => {
-//     socket.disconnect();
-//     socket.removeAllListeners();
-//   };
-// }, [user?.id]);

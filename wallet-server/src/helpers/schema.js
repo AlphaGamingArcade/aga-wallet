@@ -18,7 +18,7 @@ module.exports = {
         user_id: Joi.string().required(),
     }),
     registerPushNotificationTokenSchema: Joi.object({
-        user_id: Joi.string().required(),
+        user_id: Joi.string().allow(null),
         push_notification_token: Joi.string().required(),
         platform: Joi.string().required(),
     }),

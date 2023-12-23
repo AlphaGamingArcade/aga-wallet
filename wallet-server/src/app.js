@@ -48,18 +48,14 @@ io.of('/wallet').on('connection', (socket) => {
         }
     })
 
-    socket.on('deleteRoom', (data) => {
-        
-    })
+    socket.on('deleteRoom', (data) => {})
 
-    socket.on('new-block-added', (data) => {
-       
-    })
+    socket.on('new-block-added', (data) => {})
 })
 
 io.of('/blockchain').on('connection', (socket) => {
     socket.on('block-notify', (data) => {
-       console.log(data)
+        console.log(data)
     })
 })
 

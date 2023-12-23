@@ -17,3 +17,12 @@ CREATE TABLE notifications (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME DEFAULT NULL
 );
+
+CREATE TABLE devices (
+    id INT IDENTITY(1, 1) PRIMARY KEY,
+    device_name VARCHAR(250) NOT NULL,
+    user_id VARCHAR(250) NOT NULL,
+	push_tokens VARCHAR(250) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT GETDATE()
+);

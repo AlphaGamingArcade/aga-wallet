@@ -5,10 +5,56 @@ import TransactionsTab from './tabs/transactions';
 import { TouchableOpacity } from 'react-native';
 import { BOTTOM_TAB_HEIGHT, COLORS, FONT_FAMILY } from '../utils/app_constants';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useEffect, useState } from 'react';
+import io from 'socket.io-client'
+import { useUser } from '../services/store/user/userContext';
+import { usePushNotifications } from '../hooks/usePushNotification';
+import { genericPostRequest } from '../services/api/genericPostRequest';
 
 const Tab = createBottomTabNavigator();
 
 export default function IndexScreen() {
+  const { expoPushToken } = usePushNotifications()
+  const { user } = useUser();
+  const [hasConnection, setConnection] = useState(false);
+
+  useEffect(() => {
+    const registerPushNotifToken = async () => {
+      try {
+              await genericPostRequest('push-notifications/register', {
+                user_id: user.id,
+                push_notification_token: expoPushToken,
+                platform: Platform.OS,
+              });
+              alert('Registered for push notifications');
+      } catch (error) {
+        console.log(error)
+        alert("Register push token failed")
+      }
+    }
+    if (expoPushToken && user.id) {
+      registerPushNotifToken() 
+    }
+  }, [expoPushToken, user.id])
+
+  useEffect(() => {
+    const socket = io(process.env.EXPO_PUBLIC_SOCKET_URL, {
+      transports: ['websocket'],
+    });
+
+    socket.io.on('open', () => setConnection(true));
+    socket.io.on('close', () => setConnection(false));
+
+    if (user?.id) {
+      socket.emit('setUserID', { userID: user?.id ?? '' });
+    }
+
+    return () => {
+      socket.disconnect();
+      socket.removeAllListeners();
+    };
+  }, [user?.id]);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -49,3 +95,24 @@ export default function IndexScreen() {
     </Tab.Navigator>
   );
 }
+
+  // const saveUserPushNotifToken = async (pushToken) => {
+  //   if (user?.id) {
+  //     try {
+  //       await genericPostRequest('push-notifications/register', {
+  //         user_id: user.id,
+  //         push_notification_token: pushToken,
+  //         platform: Platform.OS,
+  //       });
+  //       alert(pushToken)
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (expoPushToken) {
+  //     saveUserPushNotifToken(expoPushToken);
+  //   }
+  // }, [expoPushToken]);
