@@ -18,8 +18,7 @@ import {
   COLORS,
   COUNTRY_CODE,
   FONT_FAMILY,
-  FONT_SIZE,
-  STATUS_TYPE,
+  FONT_SIZE
 } from '../utils/app_constants';
 import SignUpAccountProfile from '../components/SignUpAccountProfile';
 import SignUpCredentials from '../components/SignUpCredentials';

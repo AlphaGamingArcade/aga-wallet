@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Pressable } from 'react-native';
+import { FONT_SIZE } from '../utils/app_constants';
 export default function GameCard({ game }) {
   return (
     <TouchableOpacity style={styles.gameContainer}>
@@ -50,12 +51,12 @@ const styles = StyleSheet.create({
   },
   gameName: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 14,
+    fontSize: FONT_SIZE.REGULAR,
   },
   gameType: {
     fontFamily: 'Poppins-Regular',
     color: '#838383',
-    fontSize: 13,
+    fontSize: FONT_SIZE.SMALL,
   },
   featured: {
     position: 'absolute',
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
   },
   featuredText: {
     fontFamily: 'Poppins-Regular',
-    fontSize: 14,
+    fontSize: FONT_SIZE.REGULAR,
     color: '#ffffff',
   },
 });

@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeTab from './tabs/home';
 import SettingsTab from './tabs/settings';
 import TransactionsTab from './tabs/transactions';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { BOTTOM_TAB_HEIGHT, COLORS, FONT_FAMILY } from '../utils/app_constants';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -49,30 +49,3 @@ export default function IndexScreen() {
     </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    bottom: 0,
-    height: 75,
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F4F5F7',
-    gap: 85,
-    padding: 10,
-  },
-  navbarItems: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  navBarIMG: {
-    width: 30,
-    height: 27,
-  },
-  notActive: {
-    color: '#838383',
-  },
-});
