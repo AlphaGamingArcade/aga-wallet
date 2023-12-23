@@ -31,9 +31,8 @@ const notificationInfo = {
   },
 };
 
-export default function Notification() {
-  const option = OPTION_TYPE.RECEIVE;
-
+export default function Notification({data}) {
+  
   const openModal = useRef(null);
   const clickOpenModal = () => {
     openModal?.current?.open();
@@ -53,10 +52,10 @@ export default function Notification() {
             end={{ x: 1, y: 0 }}
             style={styles.circle}
           >
-            <Image source={notificationInfo[option].notificationImg} style={styles.optionIcon} />
+            <Image source={notificationInfo[data.type].notificationImg} style={styles.optionIcon} />
           </LinearGradient>
           <View style={styles.notificationMessegeInfo}>
-            <Text style={styles.notificationMessege}>You received money from John Doe</Text>
+            <Text style={styles.notificationMessege}>{data.type}</Text>
             <Text style={styles.notificationMessegeTime}>12 minutes ago</Text>
           </View>
         </View>
@@ -68,9 +67,10 @@ export default function Notification() {
             <Text style={styles.modalHeaderText}>Recieved Money</Text>
             <Text style={styles.modalDateText}>December 18, 2023 3:47 PM</Text>
             <Text style={styles.modalContentText}>
-              You have received a $1000 deposit from John Doe. Your new account balance is $50,000
+            {data.source}
+              {/* You have received a $1000 deposit from John Doe. Your new account balance is $50,000
               as of 12-18-23 at 3:47 PM. Transaction Number: 1234345. Thank you for using our
-              services!
+              services! */}
             </Text>
             <TouchableOpacity onPress={clickCloseModal} style={styles.closeModalButton}>
               <Text style={styles.closeText}>Close</Text>

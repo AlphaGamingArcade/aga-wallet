@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -14,12 +14,15 @@ import Notification from '../components/Notification';
 import { genericGetRequest } from '../services/api/genericGetRequest';
 
 export default function NotificationScreen({ navigation }) {
+  const [ notification , setNotification] = useState([])
   const backButtonHandler = () => {
     navigation.goBack();
   };
   const fetchData = async () => {
     try {
-      const data = await genericGetRequest('users/notification');
+      const response = await genericGetRequest('users/notification');
+      setNotification(response.data)
+
     } catch (error) {
       console.log(error, ' heree');
     }
@@ -40,8 +43,10 @@ export default function NotificationScreen({ navigation }) {
         contentContainerStyle={styles.recentContainer}
         style={styles.mainContainer}
         showsVerticalScrollIndicator={false}
-      >
-        <Notification />
+      > 
+        {notification.map((notification) => (
+          <Notification key={notification.user_id} data={notification}/>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
