@@ -1,4 +1,4 @@
-CREATE TABLE push_notifications (
+CREATE TABLE push_tokens (
     token_id INT NOT NULL,
     user_id NVARCHAR(510) NULL,
     token NVARCHAR(510) NULL,

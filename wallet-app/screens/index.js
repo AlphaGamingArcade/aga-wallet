@@ -2,14 +2,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeTab from './tabs/home';
 import SettingsTab from './tabs/settings';
 import TransactionsTab from './tabs/transactions';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
-import homeIconRed from '../assets/home-icon-red.png';
-import homeIconGray from '../assets/home-icon-gray.png';
-import transactionsIconRed from '../assets/transactions-icon-red.png';
-import transactionsIconGray from '../assets/transactions-icon-gray.png';
-import settingsIconRed from '../assets/settings-icon-red.png';
-import settingsIconGray from '../assets/settings-icon-gray.png';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { BOTTOM_TAB_HEIGHT, COLORS, FONT_FAMILY } from '../utils/app_constants';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,9 +13,10 @@ export default function IndexScreen() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
+        backgroundColor: COLORS.WHITE,
         tabBarStyle: { height: BOTTOM_TAB_HEIGHT },
         tabBarLabelStyle: {
-          fontSize: 14,
+          fontSize: 12,
           paddingBottom: 5,
           fontFamily: FONT_FAMILY.POPPINS_MEDIUM,
           textTransform: 'capitalize',
@@ -28,23 +24,27 @@ export default function IndexScreen() {
         tabBarButton: (props) => <TouchableOpacity {...props} />,
         tabBarActiveTintColor: COLORS.PRIMARY,
         tabBarInactiveTintColor: '#838383',
-        tabBarIcon: ({ focused }) => {
-          let iconSource;
+        tabBarIcon: ({ color, size, focused }) => {
+          let iconName;
 
           if (route.name === 'home') {
-            iconSource = focused ? homeIconRed : homeIconGray;
+            iconName = 'home';
           } else if (route.name === 'transactions') {
-            iconSource = focused ? transactionsIconRed : transactionsIconGray;
+            iconName = focused ? 'list' : 'list';
           } else if (route.name === 'settings') {
-            iconSource = focused ? settingsIconRed : settingsIconGray;
+            iconName = focused ? 'settings-sharp' : 'settings-outline';
           }
 
-          return <Image source={iconSource} style={styles.navBarIMG} />;
+          return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
     >
       <Tab.Screen name="home" component={HomeTab} />
-      <Tab.Screen name="transactions" component={TransactionsTab} />
+      <Tab.Screen
+        name="transactions"
+        component={TransactionsTab}
+        options={{ tabBarBadge: 3, tabBarBadgeStyle: { backgroundColor: COLORS.PRIMARY } }}
+      />
       <Tab.Screen name="settings" component={SettingsTab} />
     </Tab.Navigator>
   );

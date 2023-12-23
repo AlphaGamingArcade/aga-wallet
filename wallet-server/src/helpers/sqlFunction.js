@@ -224,15 +224,15 @@ module.exports = class sqlFunction {
         try {
             const query = await db.request().query(
                 `
-                IF NOT EXISTS(SELECT * FROM push_notifications WHERE user_id = '${params.userId}' AND platform = '${params.platform}')
+                IF NOT EXISTS(SELECT * FROM push_tokens WHERE user_id = '${params.userId}' AND platform = '${params.platform}')
                 BEGIN
-                    INSERT INTO push_notifications (user_id, token, platform)
+                    INSERT INTO push_tokens (user_id, token, platform)
                     OUTPUT INSERTED.*
                     VALUES ('${params.userId}', '${params.token}', '${params.platform}')
                 END
                 ELSE
                 BEGIN
-                    UPDATE push_notifications SET token = '${params.token}', updated_at = GETDATE()
+                    UPDATE push_tokens SET token = '${params.token}', updated_at = GETDATE()
                     OUTPUT INSERTED.*
                     WHERE user_id = '${params.userId}' AND platform = '${params.platform}';
                 END
@@ -273,4 +273,38 @@ module.exports = class sqlFunction {
             throw new Error('Internal Server Error')
         }
     }
+
+    /**
+     * Represents a wallets addresses.
+     * @property {string[]} wallet_address - An array of wallet addresses.
+     */
+    static getWalletPushTokens = async (wallet_address) => {
+        const db = await connectDb()
+        try { 
+            const query = await db
+                .request()
+                .query(
+                    `
+                    SELECT 
+                        wallets.wallet_address,
+                        users.id AS user_id,
+                        push_tokens.token AS push_token
+                    FROM 
+                        users
+                    INNER JOIN 
+                        wallets ON users.id = wallets.user_id
+                    INNER JOIN 
+                        push_tokens ON wallets.user_id = push_tokens.user_id
+                    WHERE 
+                        wallets.wallet_address IN ('${wallet_address}');
+
+                    `
+                )
+            return { ...query.recordset }
+        } catch (error) {
+            console.log(error)
+            throw new Error('Internal Server Error')
+        }
+    }
+
 }

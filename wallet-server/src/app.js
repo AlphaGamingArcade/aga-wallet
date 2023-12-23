@@ -58,7 +58,7 @@ io.of('/wallet').on('connection', (socket) => {
 })
 
 io.of('/blockchain').on('connection', (socket) => {
-    socket.on('added-new-block', (data) => {
+    socket.on('block-notify', (data) => {
        console.log(data)
     })
 })

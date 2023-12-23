@@ -4,26 +4,24 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ReceiveIcon from '../assets/receive-icon-white.png';
 import UpdatesIcon from '../assets/notification-icon-white.png';
 import SendIcon from '../assets/send-icon-white.png';
-import { COLORS, FONT_FAMILY, FONT_SIZE , OPTION_TYPE } from '../utils/app_constants';
+import { COLORS, FONT_FAMILY, FONT_SIZE, OPTION_TYPE } from '../utils/app_constants';
 
 const notificationInfo = {
   receive: {
-    notificationImg:ReceiveIcon
+    notificationImg: ReceiveIcon,
   },
   send: {
-    notificationImg:SendIcon
+    notificationImg: SendIcon,
   },
   update: {
-    notificationImg:UpdatesIcon
-  }
-}
+    notificationImg: UpdatesIcon,
+  },
+};
 
 export default function Notification() {
-  const option = OPTION_TYPE.RECEIVE
-  
-  const handleClick = () => {
+  const option = OPTION_TYPE.RECEIVE;
 
-  };
+  const handleClick = () => {};
 
   return (
     <View style={styles.container}>
@@ -34,13 +32,13 @@ export default function Notification() {
           end={{ x: 1, y: 0 }}
           style={styles.circle}
         >
-        <Image source={notificationInfo[option].notificationImg} style={styles.optionIcon} />
+          <Image source={notificationInfo[option].notificationImg} style={styles.optionIcon} />
         </LinearGradient>
-              <View style={styles.notificationMessegeInfo}>
-                <Text style={styles.notificationMessege}>You received money from John Doe</Text>
-                <Text style={styles.notificationMessegeTime}>12 minutes ago</Text>
-              </View>
+        <View style={styles.notificationMessegeInfo}>
+          <Text style={styles.notificationMessege}>You received money from John Doe</Text>
+          <Text style={styles.notificationMessegeTime}>12 minutes ago</Text>
         </View>
+      </View>
       <TouchableOpacity onPress={handleClick}>
         <Text style={styles.notificationButtonText}>...</Text>
       </TouchableOpacity>
@@ -77,14 +75,14 @@ const styles = StyleSheet.create({
     height: 25,
   },
   notificationMessegeContainer: {
-    flex:1,
-    marginTop:10
+    flex: 1,
+    marginTop: 10,
   },
   notificationAllMessege: {
-    marginTop:15
+    marginTop: 15,
   },
   notificationMessegeInfo: {
-    flex:1,
+    flex: 1,
   },
   notificationMessege: {
     fontFamily: FONT_FAMILY.POPPINS_REGULAR,
@@ -97,7 +95,7 @@ const styles = StyleSheet.create({
   notificationButtonText: {
     fontFamily: FONT_FAMILY.POPPINS_BOLD,
     color: COLORS.DARK_GRAY,
-    fontSize: FONT_SIZE.LARGE
+    fontSize: FONT_SIZE.LARGE,
   },
   notificationMessegeAll: {
     fontFamily: FONT_FAMILY.POPPINS_REGULAR,

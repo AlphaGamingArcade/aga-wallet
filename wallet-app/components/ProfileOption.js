@@ -3,17 +3,18 @@ import LeftIcon from '../assets/arrow-left-gray.png';
 import { TouchableOpacity, Image, Text, StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, FONT_FAMILY, FONT_SIZE } from '../utils/app_constants';
+import { useAuth } from '../services/store/auth/AuthContext';
 
-export default function ProfileOption({ option, navigation, onClose }) {
+export default function ProfileOption({ option, onClose }) {
   const closeDrawerRef = useRef(null);
+  const { signOut } = useAuth();
+
   const onPressOption = async () => {
     if (option.name == 'Log out') {
       closeDrawerRef.current?.close();
       try {
         onClose();
-        const keys = ['@AgaWallet_USER', '@AgaWallet_WALLETS', '@AgaWallet_TOKEN'];
-        await AsyncStorage.multiRemove(keys);
-        navigation.navigate('signin');
+        signOut();
       } catch (error) {
         console.log(error);
       }

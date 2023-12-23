@@ -6,7 +6,7 @@ import {
   Animated,
   Dimensions,
   TouchableWithoutFeedback,
-  Modal
+  Modal,
 } from 'react-native';
 
 const CustomDrawer = forwardRef(function CustomDrawer(props, ref) {

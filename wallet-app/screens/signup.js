@@ -26,10 +26,10 @@ import SignUpCredentials from '../components/SignUpCredentials';
 import SignUpDataPrivacyAndPolicy from '../components/SignUpDataPrivacy';
 import useFormErrors from '../hooks/useFormErrors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useToken } from '../services/store/token/tokenContext';
 import { useWallets } from '../services/store/wallets/walletsContext';
-import { useUser } from '../services/store/user/userContext';
 import io from 'socket.io-client';
+import { useAuth } from '../services/store/auth/AuthContext';
+import { useUser } from '../services/store/user/userContext';
 
 const signUpSteps = [
   {
@@ -50,9 +50,9 @@ const signUpSteps = [
 ];
 
 export default function SignUpScreen({ navigation }) {
-  const tokenContext = useToken();
   const walletsContext = useWallets();
-  const userContext = useUser();
+  const userContext = useUser()
+  const { signIn } = useAuth()
 
   const [stepIndex, setStepIndex] = useState(0);
   const errorAlertRef = useRef(null);
@@ -156,16 +156,13 @@ export default function SignUpScreen({ navigation }) {
         if (walletsData?.length > 0) {
           walletsContext?.updateSelectedWallet(walletsData[0]);
         }
-        tokenContext.updateToken(tokenData);
-
         await AsyncStorage.multiSet([user, wallets, token]);
 
         const socket = io(process.env.EXPO_PUBLIC_SOCKET_URL, {
           transports: ['websocket'],
         });
         socket.emit('setUserID', { userID: userData?.id ?? '' });
-
-        navigation.navigate('index');
+        signIn({ token: tokenData });
       } catch (error) {
         console.log(error);
         setFormErrors('signUp', error?.response?.data?.message ?? 'Unexpected error occured');

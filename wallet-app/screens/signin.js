@@ -19,13 +19,14 @@ import LockIcon from '../assets/lock-icon.png';
 import WalletLogo from '../assets/aga-wallet-logo.png';
 import { useUser } from '../services/store/user/userContext';
 import { useWallets } from '../services/store/wallets/walletsContext';
-import { useToken } from '../services/store/token/tokenContext';
 import io from 'socket.io-client';
+import { useAuth } from '../services/store/auth/AuthContext';
 
 export default function SignInScreen({ navigation }) {
   const userContext = useUser();
   const walletsContext = useWallets();
-  const tokenContext = useToken();
+  const { state: { userToken }} = useAuth()
+  const { signIn } = useAuth();
 
   const errorAlertRef = useRef(null);
   const [error, setError] = useState({ title: '', message: '' });
@@ -60,14 +61,12 @@ export default function SignInScreen({ navigation }) {
       if (walletsData?.length > 0) {
         walletsContext?.updateSelectedWallet(walletsData[0]);
       }
-      tokenContext.updateToken(tokenData);
 
       const socket = io(process.env.EXPO_PUBLIC_SOCKET_URL, {
         transports: ['websocket'],
       });
       socket.emit('setUserID', { userID: userData?.id ?? '' });
-
-      navigation.navigate('index');
+      signIn({ token: tokenData });
     } catch (error) {
       const errorMessage = error?.response?.data?.message ?? 'Unexpected error occured';
       setError({ title: `Login failed`, message: errorMessage });
