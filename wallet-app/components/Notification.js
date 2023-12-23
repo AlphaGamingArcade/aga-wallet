@@ -14,12 +14,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ReceiveIcon from '../assets/receive-icon-white.png';
 import UpdatesIcon from '../assets/notification-icon-white.png';
 import SendIcon from '../assets/send-icon-white.png';
+import DeleteIcon from '../assets/delete-icon.png'
 import { COLORS, FONT_FAMILY, FONT_SIZE, OPTION_TYPE } from '../utils/app_constants';
 import NotificationModal from './NotificationModal';
 
 const notificationInfo = {
   receive: {
     notificationImg: ReceiveIcon,
+   
   },
   send: {
     notificationImg: SendIcon,
@@ -33,45 +35,51 @@ export default function Notification() {
   const option = OPTION_TYPE.RECEIVE;
 
   const openModal = useRef(null);
-  const handleClick = () => {
+  const clickOpenModal = () => {
     openModal?.current?.open();
   };
 
+  const clickCloseModal = () => {
+    openModal?.current?.close();
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.notificationContainer}>
-        <LinearGradient
-          colors={[COLORS.PRIMARY, 'rgba(0, 0, 0, 0.7)']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.circle}
-        >
-          <Image source={notificationInfo[option].notificationImg} style={styles.optionIcon} />
-        </LinearGradient>
-        <View style={styles.notificationMessegeInfo}>
-          <Text style={styles.notificationMessege}>You received money from John Doe</Text>
-          <Text style={styles.notificationMessegeTime}>12 minutes ago</Text>
+    <TouchableOpacity onPress={clickOpenModal}>
+      <View style={styles.container}>
+        <View style={styles.notificationContainer}>
+          <LinearGradient
+            colors={[COLORS.PRIMARY, 'rgba(0, 0, 0, 0.7)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.circle}
+          >
+            <Image source={notificationInfo[option].notificationImg} style={styles.optionIcon} />
+          </LinearGradient>
+          <View style={styles.notificationMessegeInfo}>
+            <Text style={styles.notificationMessege}>You received money from John Doe</Text>
+            <Text style={styles.notificationMessegeTime}>12 minutes ago</Text>
+          </View>
         </View>
-      </View>
-      <TouchableOpacity onPress={handleClick}>
-        <Text style={styles.notificationButtonText}>...</Text>
-      </TouchableOpacity>
-      <View style={styles.notificationModal}>
-        <NotificationModal 
-        ref={openModal}
-        >
-          
+        <TouchableOpacity>
+          <Image source={DeleteIcon} style={styles.deleteIcon}/>
+        </TouchableOpacity>
+        <View style={styles.notificationModal}>
+          <NotificationModal ref={openModal}>
             <Text style={styles.modalHeaderText}>Recieved Money</Text>
-            <Text style={styles.modalDateText}>December 18, 2023 3:47 PM </Text>
+            <Text style={styles.modalDateText}>December 18, 2023 3:47 PM</Text>
             <Text style={styles.modalContentText}>
               You have received a $1000 deposit from John Doe. Your new account balance is $50,000
               as of 12-18-23 at 3:47 PM. Transaction Number: 1234345. Thank you for using our
               services!
+              {/* You have sent a $1000 deposit to John Doe. Your new account balance is $50,000 as of 12-18-23 at 3:47 PM. Transaction Number: 1234345. */}
             </Text>
-          
-        </NotificationModal>
+            <TouchableOpacity onPress={clickCloseModal} style={styles.closeModalButton}>
+              <Text style={styles.closeText}>Close</Text>
+            </TouchableOpacity>
+          </NotificationModal>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({
@@ -121,10 +129,10 @@ const styles = StyleSheet.create({
     color: COLORS.DARK_GRAY,
     fontSize: FONT_SIZE.SMALL,
   },
-  notificationButtonText: {
-    fontFamily: FONT_FAMILY.POPPINS_BOLD,
-    color: COLORS.DARK_GRAY,
-    fontSize: FONT_SIZE.LARGE,
+  deleteIcon:{
+    width:25,
+    height:25,
+    marginRight:5
   },
   notificationMessegeAll: {
     fontFamily: FONT_FAMILY.POPPINS_REGULAR,
@@ -138,21 +146,36 @@ const styles = StyleSheet.create({
   notificationModal: {
     position: 'absolute',
   },
-  modalHeaderText:{
-    color:COLORS.PRIMARY,
-    fontFamily:FONT_FAMILY.POPPINS_SEMI_BOLD,
-    fontSize:FONT_SIZE.LARGE
+  modalHeaderText: {
+    color: COLORS.PRIMARY,
+    fontFamily: FONT_FAMILY.POPPINS_SEMI_BOLD,
+    fontSize: FONT_SIZE.LARGE,
   },
-  modalDateText:{
-    fontFamily:FONT_FAMILY.POPPINS_LIGHT,
-    fontSize:FONT_SIZE.REGULAR
+  modalDateText: {
+    fontFamily: FONT_FAMILY.POPPINS_LIGHT,
+    fontSize: FONT_SIZE.REGULAR,
   },
-  modalContentText:{
-    fontFamily:FONT_FAMILY.POPPINS_REGULAR,
-    fontSize:FONT_SIZE.REGULAR,
-    textAlign:'justify',
-    lineHeight:23,
-    marginTop:20
-  }
-
+  modalContentText: {
+    fontFamily: FONT_FAMILY.POPPINS_REGULAR,
+    fontSize: FONT_SIZE.REGULAR,
+    textAlign: 'justify',
+    lineHeight: 23,
+    marginTop: 20,
+  },
+  closeModalButton: {
+    backgroundColor: COLORS.PRIMARY,
+    display: 'flex',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 30,
+    padding: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderRadius: 5,
+  },
+  closeText: {
+    fontFamily: FONT_FAMILY.POPPINS_SEMI_BOLD,
+    fontSize: FONT_SIZE.REGULAR,
+    color: COLORS.WHITE,
+  },
 });
