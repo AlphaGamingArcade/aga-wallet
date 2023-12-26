@@ -81,7 +81,20 @@ export default function Notification({data}) {
           </NotificationModal>
         </View>
       </View>
-    </TouchableOpacity>
+      <TouchableOpacity onPress={handleClick}>
+        <Text style={styles.notificationButtonText}>...</Text>
+      </TouchableOpacity>
+      <View style={styles.notificationModal}>
+        <NotificationModal ref={openModal}>
+          <Text style={styles.modalHeaderText}>Recieved Money</Text>
+          <Text style={styles.modalDateText}>December 18, 2023 3:47 PM </Text>
+          <Text style={styles.modalContentText}>
+            You have received a $1000 deposit from John Doe. Your new account balance is $50,000 as
+            of 12-18-23 at 3:47 PM. Transaction Number: 1234345. Thank you for using our services!
+          </Text>
+        </NotificationModal>
+      </View>
+    </TouchableOpacity >
   );
 }
 const styles = StyleSheet.create({
@@ -164,27 +177,6 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     marginTop: 20,
   },
-  closeModalButton: {
-    backgroundColor: COLORS.PRIMARY,
-    display: 'flex',
-    alignItems: 'center',
-    alignSelf: 'center',
-    marginTop: 30,
-    padding: 15,
-    paddingTop: 5,
-    paddingBottom: 5,
-    borderRadius: 5,
-  },
-  closeText: {
-    fontFamily: FONT_FAMILY.POPPINS_SEMI_BOLD,
-    fontSize: FONT_SIZE.REGULAR,
-    color: COLORS.WHITE,
-  },
-  activeIndicator:{
-    borderWidth:1,
-    borderColor:COLORS.PRIMARY
-  }
-
 });
 
 {

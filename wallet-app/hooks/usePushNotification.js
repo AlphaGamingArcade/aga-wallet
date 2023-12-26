@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
@@ -43,7 +43,7 @@ export const usePushNotifications = () => {
         alert('Failed to get push token for push notification!');
         return;
       }
-      token = await Notifications.getDevicePushTokenAsync({
+      token = await Notifications.getExpoPushTokenAsync({
         projectId: Constants.expoConfig.extra.eas.projectId,
       });
     } else {

@@ -19,7 +19,7 @@ export default function AssetItemCard(props) {
       <View style={styles.assetInfoContainer2}>
         <Text style={styles.amountText}>{props.asset.amount.toLocaleString()}</Text>
         <Text style={styles.amountConvertionText}>
-          ${props.asset.amountConversion.toLocaleString()}.00
+          ${props.asset.amountConversion.toLocaleString()}
         </Text>
       </View>
     </TouchableOpacity>

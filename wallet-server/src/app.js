@@ -48,22 +48,18 @@ io.of('/wallet').on('connection', (socket) => {
         }
     })
 
-    socket.on('deleteRoom', (data) => {
-        
-    })
+    socket.on('deleteRoom', (data) => {})
 
-    socket.on('new-block-added', (data) => {
-       
-    })
+    socket.on('new-block-added', (data) => {})
 })
 
 io.of('/blockchain').on('connection', (socket) => {
-    socket.on('added-new-block', (data) => {
-       console.log(data)
+    socket.on('block-notify', (data) => {
+        console.log(data)
     })
 })
 
-server.listen(process.env.PORT, "192.168.8.100", async () => {
+server.listen(process.env.PORT, process.env.IP, async () => {
     console.clear()
     console.log(`Listen at port`, process.env.PORT)
 })

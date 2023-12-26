@@ -19,13 +19,13 @@ import LockIcon from '../assets/lock-icon.png';
 import WalletLogo from '../assets/aga-wallet-logo.png';
 import { useUser } from '../services/store/user/userContext';
 import { useWallets } from '../services/store/wallets/walletsContext';
-import { useToken } from '../services/store/token/tokenContext';
 import io from 'socket.io-client';
+import { useAuth } from '../services/store/auth/AuthContext';
 
 export default function SignInScreen({ navigation }) {
-  const userContext = useUser();
   const walletsContext = useWallets();
-  const tokenContext = useToken();
+  const { registerUser } = useUser();
+  const { signIn } = useAuth();
 
   const errorAlertRef = useRef(null);
   const [error, setError] = useState({ title: '', message: '' });
@@ -42,33 +42,33 @@ export default function SignInScreen({ navigation }) {
         phone_number: phoneNumber,
         password: password,
       });
-      const keys = ['@AgaWallet_USER', '@AgaWallet_WALLETS', '@AgaWallet_TOKEN'];
+      const keys = ['@AgaWallet_WALLETS', '@AgaWallet_TOKEN'];
       await AsyncStorage.multiRemove(keys);
 
       const userData = res?.user ?? {};
       const walletsData = res?.wallets ?? [];
       const tokenData = res?.token ?? '';
 
-      const user = ['@AgaWallet_USER', JSON.stringify(userData)];
       const wallets = ['@AgaWallet_WALLETS', JSON.stringify(walletsData)];
       const token = ['@AgaWallet_TOKEN', JSON.stringify(tokenData)];
 
-      await AsyncStorage.multiSet([user, wallets, token]);
+      await AsyncStorage.multiSet([wallets, token]);
 
-      userContext.updateUser(userData);
       walletsContext.updateWallets(walletsData);
       if (walletsData?.length > 0) {
         walletsContext?.updateSelectedWallet(walletsData[0]);
       }
-      tokenContext.updateToken(tokenData);
 
-      const socket = io(process.env.EXPO_PUBLIC_SOCKET_URL, {
-        transports: ['websocket'],
-      });
-      socket.emit('setUserID', { userID: userData?.id ?? '' });
+      // const socket = io(process.env.EXPO_PUBLIC_SOCKET_URL, {
+      //   transports: ['websocket'],
+      // });
 
-      navigation.navigate('index');
+      // socket.emit('setUserID', { userID: userData?.id ?? '' });
+
+      registerUser({ user: userData });
+      signIn({ token: tokenData });
     } catch (error) {
+      console.log(error);
       const errorMessage = error?.response?.data?.message ?? 'Unexpected error occured';
       setError({ title: `Login failed`, message: errorMessage });
       errorAlertRef.current?.show();
@@ -93,9 +93,6 @@ export default function SignInScreen({ navigation }) {
           <Image source={WalletLogo} style={styles.walletLogo}></Image>
           <View style={styles.headerContainerText}>
             <Text style={styles.loginHeaderText}>Sign in</Text>
-            {/* <Text style={styles.loginInfoText}>
-              Please login using your aga wallet credentials to continue.
-            </Text> */}
           </View>
           <View style={styles.credentialsContainer}>
             <View style={styles.phoneNumberInputContainer}>

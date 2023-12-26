@@ -13,14 +13,16 @@ import {
 import { COLORS, FONT_SIZE, FONT_FAMILY, APP_STATUS, STATUS_TYPE } from '../utils/app_constants';
 import ArrowLeftV2 from '../assets/arrow-left-v2.png';
 import { useSendAssetContext } from '../services/store/sendAsset/sendAssetContext';
-import { useToken } from '../services/store/token/tokenContext';
 import { genericPostRequest } from '../services/api/genericPostRequest';
 import { useWallets } from '../services/store/wallets/walletsContext';
+import { useAuth } from '../services/store/auth/AuthContext';
 
 export default function SendAmountScreen({ navigation }) {
   const sendAssetContext = useSendAssetContext();
   const walletsContext = useWallets();
-  const tokenContext = useToken();
+  const {
+    state: { userToken },
+  } = useAuth();
   const userBalance = walletsContext?.selectedWallet?.balance ?? 0;
   const [status, setStatus] = useState(APP_STATUS.IDLE);
 
@@ -61,7 +63,7 @@ export default function SendAmountScreen({ navigation }) {
           sender_address: sendAssetContext?.transaction?.from ?? '',
           amount: parseFloat(amount) ?? 0,
         },
-        tokenContext?.token
+        userToken
       );
 
       navigation.navigate('send-status', { status: STATUS_TYPE.SUCCESS });

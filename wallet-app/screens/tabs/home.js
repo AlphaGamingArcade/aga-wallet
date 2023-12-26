@@ -21,15 +21,15 @@ import WalletAssetsCard from '../../components/WalletAssetsCard';
 import WalletBalanceCard from '../../components/WalletBalanceCard';
 import Drawer from '../../components/CustomDrawer';
 import ProfileDrawer from '../../components/ProfileDrawer';
-import { useToken } from '../../services/store/token/tokenContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../services/store/auth/AuthContext';
 
 export default function HomeTab({ navigation }) {
-  const userContext = useUser();
+  const { state: userState, updateUser } = useUser();
   const walletsContext = useWallets();
-  const tokenContext = useToken();
-  const token = tokenContext?.token ?? '';
-
+  const {
+    state: { userToken },
+  } = useAuth();
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(
@@ -37,7 +37,7 @@ export default function HomeTab({ navigation }) {
       if (userId) {
         setRefreshing(true);
         try {
-          const res = await genericGetRequest(`users/${userId}`, tokenContext?.token ?? '');
+          const res = await genericGetRequest(`users/${userId}`, userToken);
           const keys = ['@AgaWallet_USER', '@AgaWallet_WALLETS'];
           await AsyncStorage.multiRemove(keys);
 
@@ -49,7 +49,7 @@ export default function HomeTab({ navigation }) {
 
           await AsyncStorage.multiSet([user, wallets]);
 
-          userContext.updateUser(userData);
+          updateUser({ user: userData });
           walletsContext.updateWallets(walletsData);
           if (walletsData?.length > 0) {
             walletsContext?.updateSelectedWallet(walletsData[0]);
@@ -61,7 +61,7 @@ export default function HomeTab({ navigation }) {
         }
       }
     },
-    [token]
+    [userToken]
   );
 
   const onPressNotification = () => {
@@ -85,7 +85,7 @@ export default function HomeTab({ navigation }) {
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
-          onRefresh={() => onRefresh(userContext?.user?.id ?? '')}
+          onRefresh={() => onRefresh(userState?.user?.id ?? '')}
         />
       }
       contentContainerStyle={styles.container}
@@ -98,7 +98,7 @@ export default function HomeTab({ navigation }) {
       <View style={styles.topNav}>
         <View>
           <Text style={styles.headerText}>
-            Hello, <Text style={styles.headerUserText}>{userContext?.user?.first_name ?? ''}.</Text>
+            Hello, <Text style={styles.headerUserText}>{userState?.user?.first_name ?? ''}.</Text>
           </Text>
         </View>
         <View style={styles.userActionsContainer}>

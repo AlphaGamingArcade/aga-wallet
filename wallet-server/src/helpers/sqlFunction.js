@@ -89,18 +89,6 @@ module.exports = class sqlFunction {
         }
     }
 
-    // static signup = async (params) => {
-    //     const db = await connectDb()
-    //     try {
-    //         const query = await db.request().query(`insert into ${ params.tablename } (${ params.column }) output inserted.* values (${ params.values })`)
-    //         const { password, passcode, ...user } = query.recordset[0]
-    //         return { data: user }
-    //     } catch (error) {
-    //         const message = 'An error occurred while signing up.'
-    //         throw new Error(message)
-    //     }
-    // }
-
     static signup = async (params) => {
         const db = await connectDb()
         try {
@@ -157,7 +145,7 @@ module.exports = class sqlFunction {
             const token = this.createToken(query.recordset[0].id)
             return { responsecode: 0, data: query.recordset[0], token }
         } catch (error) {
-            const message =  error?.message ?? 'Internal server error.'
+            const message = error?.message ?? 'Internal server error.'
             throw new Error(message)
         }
     }
@@ -167,9 +155,7 @@ module.exports = class sqlFunction {
         try {
             const query = await db
                 .request()
-                .query(
-                    `select * from users where id = '${userId}'`
-                )
+                .query(`select * from users where id = '${userId}'`)
             // create token
             return { data: query.recordset[0] }
         } catch (error) {
@@ -224,15 +210,15 @@ module.exports = class sqlFunction {
         try {
             const query = await db.request().query(
                 `
-                IF NOT EXISTS(SELECT * FROM push_notifications WHERE user_id = '${params.userId}' AND platform = '${params.platform}')
+                IF NOT EXISTS(SELECT * FROM push_tokens WHERE user_id = '${params.userId}' AND platform = '${params.platform}')
                 BEGIN
-                    INSERT INTO push_notifications (user_id, token, platform)
+                    INSERT INTO push_tokens (user_id, token, platform)
                     OUTPUT INSERTED.*
                     VALUES ('${params.userId}', '${params.token}', '${params.platform}')
                 END
                 ELSE
                 BEGIN
-                    UPDATE push_notifications SET token = '${params.token}', updated_at = GETDATE()
+                    UPDATE push_tokens SET token = '${params.token}', updated_at = GETDATE()
                     OUTPUT INSERTED.*
                     WHERE user_id = '${params.userId}' AND platform = '${params.platform}';
                 END
@@ -273,4 +259,83 @@ module.exports = class sqlFunction {
             throw new Error('Internal Server Error')
         }
     }
+
+    /**
+     * Represents a wallets addresses.
+     * @property {string[]} wallet_address - An array of wallet addresses.
+     */
+    static getWalletPushTokens = async (wallet_address) => {
+        const db = await connectDb()
+        try {
+            const query = await db.request().query(
+                `
+                    SELECT 
+                        wallets.wallet_address,
+                        users.id AS user_id,
+                        push_tokens.token AS push_token
+                    FROM 
+                        users
+                    INNER JOIN 
+                        wallets ON users.id = wallets.user_id
+                    INNER JOIN 
+                        push_tokens ON wallets.user_id = push_tokens.user_id
+                    WHERE 
+                        wallets.wallet_address IN ('${wallet_address}');
+
+                    `
+            )
+
+            const resultArray = Object.values(query.recordset)
+            return resultArray
+        } catch (error) {
+            console.log(error)
+            throw new Error('Internal Server Error')
+        }
+    }
+    static isPushTokenExists = async (token) => {
+        const db = await connectDb()
+
+        try {
+            const query = await db
+                .request()
+                .query(`select * from push_tokens where token = '${token}'`)
+            return query.recordset.length > 0
+        } catch (error) {
+            const message = 'An error occurred while registering push token'
+            throw new Error(message)
+        }
+    }
+
+    static updatePushTokenUser = async (userId, platform, token) => {
+        const db = await connectDb();
+        try {
+            const query = await db
+                .request()
+                .query(`UPDATE push_tokens SET user_id = '${userId}', platform = '${platform}' OUTPUT INSERTED.* WHERE token = '${token}'`)
+    
+            return query;
+        } catch (error) {
+            const message = 'An error occurred while updating push token ss';
+            throw new Error(message);
+        }
+    };
+
+    static createPushToken = async (userId, platform, token) => {
+        const db = await connectDb();
+        
+        try {
+            const query = await db
+                .request()
+                .query(`
+                    INSERT INTO push_tokens (user_id, token, platform)
+                    OUTPUT INSERTED.*
+                    VALUES ('${userId}', '${token}', '${platform}')
+                `);
+    
+            return query.recordset.length > 0;
+        } catch (error) {
+            const message = 'An error occurred while registering push token';
+            throw new Error(message);
+        }
+    };
 }

@@ -98,7 +98,7 @@ module.exports = class useController {
             tablename: 'users',
             condition: `phone_number = '${phoneNumber}'`,
         }
-
+        
         try {
             const sqlLogin = await sqlFunction.login(findUser)
             const match = await bcrypt.compare(
@@ -185,10 +185,11 @@ module.exports = class useController {
         try {
             const isUserExists = await sqlFunction.isUserIdExists(userId)
             if (!isUserExists) {
-                return res.status(404).json({ message: "User not found" })
+                return res.status(404).json({ message: 'User not found' })
             }
 
-            const { public_key, wallet_address } = await sqlFunction.getWalletKeysByUserId(userId)
+            const { public_key, wallet_address } =
+                await sqlFunction.getWalletKeysByUserId(userId)
 
             const walletUtxos =
                 await blockchainFunction.getWalletUnspentTxOuts(wallet_address)
@@ -202,7 +203,6 @@ module.exports = class useController {
             res.status(200).json({
                 wallets: [{ public_key, wallet_address, balance }],
             })
-
         } catch (error) {
             res.status(400).json({ message: error.message })
         }
@@ -218,12 +218,13 @@ module.exports = class useController {
         try {
             const isUserExists = await sqlFunction.isUserIdExists(userId)
             if (!isUserExists) {
-                return res.status(404).json({ message: "User not found" })
+                return res.status(404).json({ message: 'User not found' })
             }
 
-            const user = await sqlFunction.getUserById(userId);
-            const { password, passcode, ...userData} = user.data
-            const { public_key, wallet_address } = await sqlFunction.getWalletKeysByUserId(userId)
+            const user = await sqlFunction.getUserById(userId)
+            const { password, passcode, ...userData } = user.data
+            const { public_key, wallet_address } =
+                await sqlFunction.getWalletKeysByUserId(userId)
 
             const walletUtxos =
                 await blockchainFunction.getWalletUnspentTxOuts(wallet_address)
@@ -238,7 +239,6 @@ module.exports = class useController {
                 user: userData,
                 wallets: [{ public_key, wallet_address, balance }],
             })
-
         } catch (error) {
             res.status(400).json({ message: error.message })
         }

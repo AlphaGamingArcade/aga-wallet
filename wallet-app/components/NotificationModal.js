@@ -11,40 +11,19 @@ import {
 
 const NotificationModal = forwardRef(function NotificationModal(props, ref) {
   const [visible, setVisible] = useState(false);
-  const opacityValue = useRef(new Animated.Value(0)).current;
-  const scaleValue = useRef(new Animated.Value(0.8)).current; // Start with a scale less than 1
+  const scaleValue = useRef(new Animated.Value(0)).current;
 
   const openModal = () => {
     setVisible(true);
-    Animated.parallel([
-      Animated.timing(opacityValue, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleValue, {
-        toValue: 1,
-        friction: 4,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    Animated.spring(scaleValue, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
   };
 
   const closeModal = () => {
-    Animated.parallel([
-      Animated.timing(opacityValue, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleValue, {
-        toValue: 0.8,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      setVisible(false);
-    });
+    setVisible(false);
+    scaleValue.setValue(0);
   };
 
   useImperativeHandle(
@@ -62,13 +41,7 @@ const NotificationModal = forwardRef(function NotificationModal(props, ref) {
   };
 
   return (
-    <Modal
-      transparent
-      visible={visible}
-      statusBarTranslucent
-      onRequestClose={closeModal}
-      animationType="fade"
-    >
+    <Modal transparent visible={visible} statusBarTranslucent onRequestClose={closeModal}>
       <SafeAreaView style={styles.container}>
         <TouchableWithoutFeedback onPress={closeModal}>
           <View style={styles.backDrop} />

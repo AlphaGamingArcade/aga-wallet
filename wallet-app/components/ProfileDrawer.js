@@ -9,17 +9,17 @@ import AgaLogo from '../assets/logo.png';
 import { useUser } from '../services/store/user/userContext';
 
 export default function ProfileDrawer({ navigation, onClose }) {
-  const userContext = useUser();
+  const { state: userState } = useUser();
 
   return (
     <View style={styles.mainContainer}>
       <View style={styles.profileContainer}>
         <View style={styles.circle}>
-          <Text style={styles.profileIcon}>{(userContext?.user?.first_name ?? '').charAt(0)}</Text>
+          <Text style={styles.profileIcon}>{(userState?.user?.first_name ?? '').charAt(0)}</Text>
         </View>
         <View style={styles.profileInfo}>
-          <Text style={styles.profileName}>{userContext?.user?.first_name ?? ''}</Text>
-          <Text style={styles.profilePhoneNumber}>{userContext?.user?.phone_number ?? ''}</Text>
+          <Text style={styles.profileName}>{userState?.user?.first_name ?? ''}</Text>
+          <Text style={styles.profilePhoneNumber}>{userState?.user?.phone_number ?? ''}</Text>
         </View>
       </View>
       <ScrollView

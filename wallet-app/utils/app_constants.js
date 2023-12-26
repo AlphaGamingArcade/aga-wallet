@@ -47,7 +47,7 @@ export const APP_STATUS = {
 
 export const COUNTRY_CODE = '+82';
 
-export const BOTTOM_TAB_HEIGHT = 70;
+export const BOTTOM_TAB_HEIGHT = 65;
 
 export const OPTION_TYPE = {
   SEND: 'send',
