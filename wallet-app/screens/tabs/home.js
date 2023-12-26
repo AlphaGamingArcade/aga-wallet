@@ -25,9 +25,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../../services/store/auth/AuthContext';
 
 export default function HomeTab({ navigation }) {
-  const userContext = useUser();
+  const { state: userState, updateUser } = useUser();
   const walletsContext = useWallets();
-  const { state: { userToken } } = useAuth()
+  const {
+    state: { userToken },
+  } = useAuth();
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(
@@ -47,7 +49,7 @@ export default function HomeTab({ navigation }) {
 
           await AsyncStorage.multiSet([user, wallets]);
 
-          userContext.updateUser(userData);
+          updateUser({ user: userData });
           walletsContext.updateWallets(walletsData);
           if (walletsData?.length > 0) {
             walletsContext?.updateSelectedWallet(walletsData[0]);
@@ -83,7 +85,7 @@ export default function HomeTab({ navigation }) {
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
-          onRefresh={() => onRefresh(userContext?.user?.id ?? '')}
+          onRefresh={() => onRefresh(userState?.user?.id ?? '')}
         />
       }
       contentContainerStyle={styles.container}
@@ -96,7 +98,7 @@ export default function HomeTab({ navigation }) {
       <View style={styles.topNav}>
         <View>
           <Text style={styles.headerText}>
-            Hello, <Text style={styles.headerUserText}>{userContext?.user?.first_name ?? ''}.</Text>
+            Hello, <Text style={styles.headerUserText}>{userState?.user?.first_name ?? ''}.</Text>
           </Text>
         </View>
         <View style={styles.userActionsContainer}>

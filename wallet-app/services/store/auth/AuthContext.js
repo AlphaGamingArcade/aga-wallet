@@ -4,9 +4,12 @@ import React, { createContext, useContext, useState } from 'react';
 const AuthContext = createContext(null);
 
 export const AuthContextProvider = ({ children }) => {
-  const { getItem: getLocalStorageToken, setItem: setLocalStorageToken, removeItem: removeLocalStorageToken } =
-    useAsyncStorage('@AgaWallet_TOKEN');
-  const [isAppReady, setIsAppReady] = useState(false);
+  const {
+    getItem: getLocalStorageToken,
+    setItem: setLocalStorageToken,
+    removeItem: removeLocalStorageToken,
+  } = useAsyncStorage('@AgaWallet_TOKEN');
+  const [isAppAuthReady, setIsAppAuthReady] = useState(false);
 
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
@@ -43,12 +46,12 @@ export const AuthContextProvider = ({ children }) => {
     const bootstrapAsync = async () => {
       let userToken;
       try {
-        setIsAppReady(false);
+        setIsAppAuthReady(false);
         userToken = await getLocalStorageToken();
       } catch (e) {
         // Restoring token failed
       } finally {
-        setIsAppReady(true);
+        setIsAppAuthReady(true);
       }
       dispatch({ type: 'RESTORE_TOKEN', token: userToken });
     };
@@ -77,7 +80,7 @@ export const AuthContextProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        isAppReady,
+        isAppAuthReady,
         state,
         dispatch,
         signIn: authContext.signIn,

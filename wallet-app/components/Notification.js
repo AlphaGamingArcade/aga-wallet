@@ -57,18 +57,13 @@ export default function Notification() {
         <Text style={styles.notificationButtonText}>...</Text>
       </TouchableOpacity>
       <View style={styles.notificationModal}>
-        <NotificationModal 
-        ref={openModal}
-        >
-          
-            <Text style={styles.modalHeaderText}>Recieved Money</Text>
-            <Text style={styles.modalDateText}>December 18, 2023 3:47 PM </Text>
-            <Text style={styles.modalContentText}>
-              You have received a $1000 deposit from John Doe. Your new account balance is $50,000
-              as of 12-18-23 at 3:47 PM. Transaction Number: 1234345. Thank you for using our
-              services!
-            </Text>
-          
+        <NotificationModal ref={openModal}>
+          <Text style={styles.modalHeaderText}>Recieved Money</Text>
+          <Text style={styles.modalDateText}>December 18, 2023 3:47 PM </Text>
+          <Text style={styles.modalContentText}>
+            You have received a $1000 deposit from John Doe. Your new account balance is $50,000 as
+            of 12-18-23 at 3:47 PM. Transaction Number: 1234345. Thank you for using our services!
+          </Text>
         </NotificationModal>
       </View>
     </View>
@@ -138,21 +133,20 @@ const styles = StyleSheet.create({
   notificationModal: {
     position: 'absolute',
   },
-  modalHeaderText:{
-    color:COLORS.PRIMARY,
-    fontFamily:FONT_FAMILY.POPPINS_SEMI_BOLD,
-    fontSize:FONT_SIZE.LARGE
+  modalHeaderText: {
+    color: COLORS.PRIMARY,
+    fontFamily: FONT_FAMILY.POPPINS_SEMI_BOLD,
+    fontSize: FONT_SIZE.LARGE,
   },
-  modalDateText:{
-    fontFamily:FONT_FAMILY.POPPINS_LIGHT,
-    fontSize:FONT_SIZE.REGULAR
+  modalDateText: {
+    fontFamily: FONT_FAMILY.POPPINS_LIGHT,
+    fontSize: FONT_SIZE.REGULAR,
   },
-  modalContentText:{
-    fontFamily:FONT_FAMILY.POPPINS_REGULAR,
-    fontSize:FONT_SIZE.REGULAR,
-    textAlign:'justify',
-    lineHeight:23,
-    marginTop:20
-  }
-
+  modalContentText: {
+    fontFamily: FONT_FAMILY.POPPINS_REGULAR,
+    fontSize: FONT_SIZE.REGULAR,
+    textAlign: 'justify',
+    lineHeight: 23,
+    marginTop: 20,
+  },
 });

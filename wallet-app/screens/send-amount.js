@@ -20,7 +20,9 @@ import { useAuth } from '../services/store/auth/AuthContext';
 export default function SendAmountScreen({ navigation }) {
   const sendAssetContext = useSendAssetContext();
   const walletsContext = useWallets();
-  const { state: { userToken }} = useAuth()
+  const {
+    state: { userToken },
+  } = useAuth();
   const userBalance = walletsContext?.selectedWallet?.balance ?? 0;
   const [status, setStatus] = useState(APP_STATUS.IDLE);
 

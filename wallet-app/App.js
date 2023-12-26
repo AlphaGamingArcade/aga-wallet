@@ -7,6 +7,8 @@ import { UserContextProvider } from './services/store/user/userContext';
 import { SendAssetContextProvider } from './services/store/sendAsset/sendAssetContext';
 import { AuthContextProvider } from './services/store/auth/AuthContext';
 import MainNavigation from './navigations/MainNavigation';
+import * as SplashScreen from 'expo-splash-screen';
+import { useCallback } from 'react';
 
 Notifications.setNotificationHandler({
   shouldPlaySound: true,
@@ -14,8 +16,10 @@ Notifications.setNotificationHandler({
   shouldShowBadge: true,
 });
 
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     'Poppins-ExtraLight': require('./assets/fonts/Poppins-ExtraLight.ttf'),
     'Poppins-Light': require('./assets/fonts/Poppins-Light.ttf'),
     'Poppins-Regular': require('./assets/fonts/Poppins-Regular.ttf'),
@@ -24,20 +28,26 @@ export default function App() {
     'Poppins-Bold': require('./assets/fonts/Poppins-Bold.ttf'),
   });
 
-  if (!fontsLoaded) {
-    return <LoadingScreen />;
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
   }
 
   return (
     <AuthContextProvider>
       <UserContextProvider>
-          <WalletsContextProvider>
-            <NetworkAssetContextProvider>
-              <SendAssetContextProvider>
-                <MainNavigation />
-              </SendAssetContextProvider>
-            </NetworkAssetContextProvider>
-          </WalletsContextProvider>
+        <WalletsContextProvider>
+          <NetworkAssetContextProvider>
+            <SendAssetContextProvider>
+              <MainNavigation onLoadLayout={onLayoutRootView}/>
+            </SendAssetContextProvider>
+          </NetworkAssetContextProvider>
+        </WalletsContextProvider>
       </UserContextProvider>
     </AuthContextProvider>
   );

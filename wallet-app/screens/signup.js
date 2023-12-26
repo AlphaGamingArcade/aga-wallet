@@ -13,13 +13,7 @@ import ArrowLeftV2 from '../assets/arrow-left-v2.png';
 import { genericPostRequest } from '../services/api/genericPostRequest';
 import { genericGetRequest } from '../services/api/genericGetRequest';
 import ErrorAlert from '../components/ErrorAlert';
-import {
-  APP_STATUS,
-  COLORS,
-  COUNTRY_CODE,
-  FONT_FAMILY,
-  FONT_SIZE
-} from '../utils/app_constants';
+import { APP_STATUS, COLORS, COUNTRY_CODE, FONT_FAMILY, FONT_SIZE } from '../utils/app_constants';
 import SignUpAccountProfile from '../components/SignUpAccountProfile';
 import SignUpCredentials from '../components/SignUpCredentials';
 import SignUpDataPrivacyAndPolicy from '../components/SignUpDataPrivacy';
@@ -50,8 +44,8 @@ const signUpSteps = [
 
 export default function SignUpScreen({ navigation }) {
   const walletsContext = useWallets();
-  const userContext = useUser()
-  const { signIn } = useAuth()
+  const { updateUser } = useUser();
+  const { signIn } = useAuth();
 
   const [stepIndex, setStepIndex] = useState(0);
   const errorAlertRef = useRef(null);
@@ -150,7 +144,7 @@ export default function SignUpScreen({ navigation }) {
 
         await AsyncStorage.multiSet([user, wallets, token]);
 
-        userContext.updateUser(userData);
+        updateUser(userData);
         walletsContext.updateWallets(walletsData);
         if (walletsData?.length > 0) {
           walletsContext?.updateSelectedWallet(walletsData[0]);

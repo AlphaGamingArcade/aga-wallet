@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as Notifications from 'expo-notifications';
 import IndexScreen from '../screens';
 import NotificationScreen from '../screens/notification-screen';
 import SignInScreen from '../screens/signin';
@@ -15,13 +14,13 @@ import SendAmountScreen from '../screens/send-amount';
 
 const MainStack = createNativeStackNavigator();
 
-export default function MainNavigation() {
-  const { state, isAppReady } = useAuth();
+export default function MainNavigation({ onLoadLayout }) {
+  const { state, isAppAuthReady } = useAuth();
 
   return (
-    <NavigationContainer>
+    <NavigationContainer onReady={onLoadLayout}>
       <MainStack.Navigator screenOptions={{ headerShown: false }}>
-        {!isAppReady && <MainStack.Screen name="loading" component={LoadingScreen} />}
+        {!isAppAuthReady && <MainStack.Screen name="loading" component={LoadingScreen} />}
         {state.userToken == null ? (
           <MainStack.Group>
             <MainStack.Screen name="signin" component={SignInScreen} />
