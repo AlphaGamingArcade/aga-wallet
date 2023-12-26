@@ -12,24 +12,33 @@ import BackIcon from '../assets/arrow-left-v2.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE } from '../utils/app_constants';
 import Notification from '../components/Notification';
 import { genericGetRequest } from '../services/api/genericGetRequest';
+const ITEMS_PER_PAGE = 6;
 
 export default function NotificationScreen({ navigation }) {
-  const [ notification , setNotification] = useState([])
+  const [notifications, setNotifications] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const backButtonHandler = () => {
     navigation.goBack();
   };
-  const fetchData = async () => {
-    try {
-      const response = await genericGetRequest('users/notification');
-      setNotification(response.data)
 
+  const fetchData = async (page) => {
+    try {
+      const response = await genericGetRequest(`users/notification?page=${page}`);
+      setNotifications((prevNotifications) => [...prevNotifications, ...response.data]);
     } catch (error) {
-      console.log(error, ' heree');
+      console.log(error);
     }
   };
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage]);
+
+  const handleLoadMore = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -43,15 +52,15 @@ export default function NotificationScreen({ navigation }) {
         contentContainerStyle={styles.recentContainer}
         style={styles.mainContainer}
         showsVerticalScrollIndicator={false}
-      > 
-        {notification.map((notification) => (
-          <Notification key={notification.user_id} data={notification}/>
+        onMomentumScrollEnd={handleLoadMore}
+      >
+        {notifications.map((notification) => (
+          <Notification key={notification.user_id} data={notification} />
         ))}
       </ScrollView>
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -8,7 +8,6 @@ import {
   ScrollView,
   Alert,
   Modal,
-  TurboModuleRegistry,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import ReceiveIcon from '../assets/receive-icon-white.png';
@@ -18,6 +17,7 @@ import DeleteIcon from '../assets/delete-icon.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE, OPTION_TYPE } from '../utils/app_constants';
 import NotificationModal from './NotificationModal';
 import TestingModal from './Modal';
+import { getDate } from '../utils/formatter';
 
 const notificationInfo = {
   receive: {
@@ -32,10 +32,12 @@ const notificationInfo = {
 };
 
 export default function Notification({data}) {
-  
+  const [isViewed , setisViewed ] = useState(data.is_viewed)
+  const date = getDate(data.created_at)
   const openModal = useRef(null);
   const clickOpenModal = () => {
     openModal?.current?.open();
+    setisViewed(true)
   };
 
   const clickCloseModal = () => {
@@ -44,8 +46,8 @@ export default function Notification({data}) {
 
   return (
     <TouchableOpacity onPress={clickOpenModal}>
-      <View style={styles.container}>
-        <View style={styles.notificationContainer}>
+      <View style={[styles.container , !isViewed ? styles.activeIndicator:'']}>
+        <View style={styles.notificationContainer }>
           <LinearGradient
             colors={[COLORS.PRIMARY, 'rgba(0, 0, 0, 0.7)']}
             start={{ x: 0, y: 0 }}
@@ -56,6 +58,7 @@ export default function Notification({data}) {
           </LinearGradient>
           <View style={styles.notificationMessegeInfo}>
             <Text style={styles.notificationMessege}>{data.type}</Text>
+
             <Text style={styles.notificationMessegeTime}>12 minutes ago</Text>
           </View>
         </View>
@@ -65,7 +68,7 @@ export default function Notification({data}) {
         <View style={styles.notificationModal}>
           <NotificationModal ref={openModal}>
             <Text style={styles.modalHeaderText}>Recieved Money</Text>
-            <Text style={styles.modalDateText}>December 18, 2023 3:47 PM</Text>
+            <Text style={styles.modalDateText}>{date}</Text>
             <Text style={styles.modalContentText}>
             {data.source}
               {/* You have received a $1000 deposit from John Doe. Your new account balance is $50,000
@@ -90,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     flexDirection: 'row',
     marginBottom: 11,
-    height: 100,
+    height: 70,
   },
   notificationContainer: {
     display: 'flex',
@@ -177,6 +180,11 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.REGULAR,
     color: COLORS.WHITE,
   },
+  activeIndicator:{
+    borderWidth:1,
+    borderColor:COLORS.PRIMARY
+  }
+
 });
 
 {
