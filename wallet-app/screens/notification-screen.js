@@ -10,6 +10,7 @@ import {
   Pressable,
   Animated,
 } from 'react-native';
+
 import BackIcon from '../assets/arrow-left-v2.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE } from '../utils/app_constants';
 import Notification from '../components/Notification';
@@ -64,7 +65,7 @@ export default function NotificationScreen({ navigation }) {
     setContainerWidth(width);
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Pressable onPress={backButtonHandler}>
           {/* Replace with your actual image source */}
@@ -99,7 +100,7 @@ export default function NotificationScreen({ navigation }) {
 
       </ScrollView> 
 
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -108,6 +109,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+  
+
   },
   header: {
     display: 'flex',
