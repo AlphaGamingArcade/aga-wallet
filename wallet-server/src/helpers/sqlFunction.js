@@ -1,10 +1,27 @@
 const { connectDb } = require('./dbConfig')
 const jwt = require('jsonwebtoken')
-const axios = require('axios')
 
 module.exports = class sqlFunction {
     static createToken = (user_id) => {
         return jwt.sign(user_id, process.env.SECRET, {})
+    }
+
+    static getWalletByAddress = async (wallets_list) => {
+        if (wallets_list.length <= 0) {
+            return [];
+        }
+        const db = await connectDb();
+        try {
+            const formattedAddresses = wallets_list.map(address => `'${address}'`).join(', ');
+            const query = await db
+                .request()
+                .query(`select * from wallets where wallet_address in (${formattedAddresses})`);
+            const result = Object.values(query.recordset);
+            return result;
+        } catch (error) {
+            const message = 'An error occurred while getting wallets by address.';
+            throw new Error(message);
+        }
     }
 
     // static getWalletKeys = async () => {
@@ -338,4 +355,19 @@ module.exports = class sqlFunction {
             throw new Error(message);
         }
     };
+
+    static registerNotifications = async (notificationList) => {
+        const db = await connectDb()
+        try {
+            const query = await db
+                .request()
+                .query(
+                    `insert into ${params.tablename} (${params.column}) output inserted.* values (${params.values})`
+                )
+            return { data: query.recordset[0] }
+        } catch (error) {
+            const message = 'An error occurred while signing up.'
+            throw new Error(message)
+        }
+    }
 }

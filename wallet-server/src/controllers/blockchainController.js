@@ -8,6 +8,14 @@ module.exports = class blockchainController {
         const stxos = req.body.stxos
         const txs = req.body.block.transactions
 
+        const txsMap = new Map();
+
+        for (let tx of txs) {
+            if (!txsMap.get(tx.tx_id)) {
+                txsMap.set(tx.tx_id, tx)
+            }
+        }
+        
         let senderWallets = stxos.map((stxo) => stxo.address)
 
         let receiverUtxos = utxos.reduce((accumulator, utxo) => {
@@ -20,31 +28,45 @@ module.exports = class blockchainController {
             return accumulator
         }, [])
 
-        const receiverAddress = receiverUtxos.map((utxo) => utxo.address)
+        const receiverAddressList = receiverUtxos.flatMap((utxo) => utxo.address)
+        
+        try {
+            const wallets = await sqlFunction.getWalletByAddress(receiverAddressList);
+            const walletMap = new Map();
 
-        if (receiverAddress.length > 0) {
-           
-            try {
-                const joinedAddress = receiverAddress.join("','")
-                // const pushTokens =
-                //     await sqlFunction.getWalletPushTokens(joinedAddress)
-                //     let notifications = pushTokens.map(pushToken => (
-                //       {
-                //         to: pushToken.push_token,
-                //         title: 'Aga Wallet',
-                //         body: 'You received $20.00',
-                //       }
-                //     ))
-                //     expo.sendPushNotificationsAsync(notifications)
-                return res.status(200).json({
-                    message: 'Ok',
-                })
-            } catch (error) {
-                console.log(error)
-                return res.status(200).json({
-                    message: 'Internal server error',
-                })
+            for (let wallet of wallets) {
+                if (!walletMap.get(wallet.wallet_address)) {
+                    delete wallet.private_key;
+                    delete wallet.public_key;
+                    walletMap.set(wallet.wallet_address, wallet)
+                }
             }
+
+            for (let utxo of receiverUtxos) {
+                if (walletMap.get(utxo.address)) {
+                    const wallet = walletMap.get(utxo.address);
+                    walletMap.set(wallet.wallet_address, {...wallet, ...utxo})
+                }
+            }
+
+            const notifications = Array.from(walletMap.values()).flatMap((data) => {
+            
+                console.log("TX ID", txsMap.get(data.tx_id))
+
+                return {
+                    userId: data.user_id,
+                    type: "RECEIVED_ASSETS",
+                    title: "Received asset",
+                    description: `You received ${data.amount} of AGA Coin from ${"Heheheheheh"}`,
+                    // data: data,
+                    txHash: data.tx_id
+                }
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                message: "Internal server error"
+            })
         }
 
         res.status(200).json({

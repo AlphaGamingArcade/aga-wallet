@@ -1,4 +1,3 @@
-const dotenv = require('dotenv').config()
 const sql = require('mssql/msnodesqlv8')
 const dbConn = process.env.CONNECTION_STRING
 const config = {
@@ -7,12 +6,10 @@ const config = {
 }
 
 const pool = new sql.ConnectionPool(config)
-const poolConnect = pool.connect()
 
 const connectDb = async () => {
     try {
-        await poolConnect
-        return poolConnect
+        return await pool.connect()
     } catch (error) {
         console.log('Database connection failed', error)
         return error

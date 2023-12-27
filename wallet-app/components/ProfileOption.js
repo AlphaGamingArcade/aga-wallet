@@ -1,23 +1,19 @@
-import React, { useRef } from 'react';
 import LeftIcon from '../assets/arrow-left-gray.png';
 import { TouchableOpacity, Image, Text, StyleSheet, View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, FONT_FAMILY, FONT_SIZE } from '../utils/app_constants';
 import { useAuth } from '../services/store/auth/AuthContext';
 import { useUser } from '../services/store/user/userContext';
 
 export default function ProfileOption({ option, onClose }) {
-  const closeDrawerRef = useRef(null);
   const { signOut } = useAuth();
   const { clearUser } = useUser();
 
   const onPressOption = async () => {
     if (option.name == 'Log out') {
-      closeDrawerRef.current?.close();
       try {
-        onClose();
         clearUser();
         signOut();
+        onClose();
       } catch (error) {
         console.log(error);
       }

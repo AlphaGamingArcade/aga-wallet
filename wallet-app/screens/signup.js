@@ -44,7 +44,7 @@ const signUpSteps = [
 
 export default function SignUpScreen({ navigation }) {
   const walletsContext = useWallets();
-  const { updateUser } = useUser();
+  const { registerUser } = useUser();
   const { signIn } = useAuth();
 
   const [stepIndex, setStepIndex] = useState(0);
@@ -134,27 +134,24 @@ export default function SignUpScreen({ navigation }) {
           passcode: 1234,
         });
 
+        const keys = ['@AgaWallet_WALLETS', '@AgaWallet_TOKEN'];
+        await AsyncStorage.multiRemove(keys);
+
         const userData = res?.user ?? {};
         const walletsData = res?.wallets ?? [];
         const tokenData = res?.token ?? '';
 
-        const user = ['@AgaWallet_USER', JSON.stringify(userData)];
         const wallets = ['@AgaWallet_WALLETS', JSON.stringify(walletsData)];
         const token = ['@AgaWallet_TOKEN', JSON.stringify(tokenData)];
 
-        await AsyncStorage.multiSet([user, wallets, token]);
+        await AsyncStorage.multiSet([wallets, token]);
 
-        updateUser(userData);
         walletsContext.updateWallets(walletsData);
         if (walletsData?.length > 0) {
           walletsContext?.updateSelectedWallet(walletsData[0]);
         }
-        await AsyncStorage.multiSet([user, wallets, token]);
 
-        const socket = io(process.env.EXPO_PUBLIC_SOCKET_URL, {
-          transports: ['websocket'],
-        });
-        socket.emit('setUserID', { userID: userData?.id ?? '' });
+        registerUser({ user: userData });
         signIn({ token: tokenData });
       } catch (error) {
         console.log(error);

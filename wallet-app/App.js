@@ -44,7 +44,7 @@ export default function App() {
         <WalletsContextProvider>
           <NetworkAssetContextProvider>
             <SendAssetContextProvider>
-              <MainNavigation onLoadLayout={onLayoutRootView}/>
+              <MainNavigation onLoadLayout={onLayoutRootView} />
             </SendAssetContextProvider>
           </NetworkAssetContextProvider>
         </WalletsContextProvider>
