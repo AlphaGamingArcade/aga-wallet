@@ -61,7 +61,7 @@ const CustomBottomSheet = forwardRef(function CustomBottomSheet(props, ref) {
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: (_, gestureState) =>
-        gestureState.dy > 5 && gestureState.dy > Math.abs(gestureState.dx), // Adjust sensitivity and ignore horizontal movements
+        gestureState.dy > 5 && gestureState.dy > Math.abs(gestureState.dx),
       onPanResponderMove: Animated.event([null, { dy: panY }], {
         useNativeDriver: false,
       }),

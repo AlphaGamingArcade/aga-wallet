@@ -246,4 +246,103 @@ module.exports = class useController {
             res.status(400).json({ message: error.message })
         }
     }
+    static getNotifications = async ( req , res ) => {
+        const data = [
+            {
+              "user_id": "1",
+              "type": "receive",
+              "source": "You have received a $100 deposit from John Doessss.",
+              "is_viewed": false,
+              "is_archived": false,
+              "created_at": "2023-12-23T10:00:00Z",
+              "updated_at": null
+            },
+            {
+              "user_id": "2",
+              "type": "update",
+              "source": "New message from Jane Doe: Hey, how are you?",
+              "is_viewed": false,
+              "is_archived": false,
+              "created_at": "2023-12-23T10:15:00Z",
+              "updated_at": null
+            },
+            {
+              "user_id": "3",
+              "type": "receive",
+              "source": "Your payment of $50 to XYZ Co. has been processed.",
+              "is_viewed": true,
+              "is_archived": false,
+              "created_at": "2023-12-23T10:30:00Z",
+              "updated_at": null
+            },
+            {
+              "user_id": "4",
+              "type": "update",
+              "source": "New message from John Smith: Regarding our upcoming meeting.",
+              "is_viewed": false,
+              "is_archived": false,
+              "created_at": "2023-12-23T10:45:00Z",
+              "updated_at": null
+            },
+            {
+              "user_id": "5",
+              "type": "receive",
+              "source": "A document has been shared with you by Alex Johnson.",
+              "is_viewed": false,
+              "is_archived": false,
+              "created_at": "2023-12-23T11:00:00Z",
+              "updated_at": null
+            },
+            {
+              "user_id": "6",
+              "type": "update",
+              "source": "New message from Sarah White: Important update regarding the project.",
+              "is_viewed": true,
+              "is_archived": false,
+              "created_at": "2023-12-23T11:15:00Z",
+              "updated_at": null
+            },
+            {
+              "user_id": "7",
+              "type": "receive",
+              "source": "Congratulations! You've earned a reward for your recent purchase.",
+              "is_viewed": false,
+              "is_archived": false,
+              "created_at": "2023-12-23T11:30:00Z",
+              "updated_at": null
+            },
+            {
+              "user_id": "8",
+              "type": "update",
+              "source": "New message from Michael Brown: Quick question about the report.",
+              "is_viewed": false,
+              "is_archived": false,
+              "created_at": "2023-12-23T11:45:00Z",
+              "updated_at": null
+            },
+            {
+              "user_id": "9",
+              "type": "receive",
+              "source": "Your subscription renewal is due soon. Click to renew now.",
+              "is_viewed": true,
+              "is_archived": false,
+              "created_at": "2023-12-23T12:00:00Z",
+              "updated_at": null
+            },
+            {
+              "user_id": "10",
+              "type": "update",
+              "source": "New message from Emily Davis: Exciting news about the upcoming event!",
+              "is_viewed": false,
+              "is_archived": false,
+              "created_at": "2023-12-23T12:15:00Z",
+              "updated_at": null
+            }
+          ];
+          
+          
+        res.status(200).json({
+           data:data
+        })
+    }
 }

@@ -1,20 +1,16 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
   Image,
   Text,
   TouchableOpacity,
-  ScrollView,
-  Alert,
-  Modal,
-  TurboModuleRegistry,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import ReceiveIcon from '../assets/receive-icon-white.png';
 import UpdatesIcon from '../assets/notification-icon-white.png';
 import SendIcon from '../assets/send-icon-white.png';
-import { COLORS, FONT_FAMILY, FONT_SIZE, OPTION_TYPE } from '../utils/app_constants';
+import { COLORS, FONT_FAMILY, FONT_SIZE } from '../utils/app_constants';
 import NotificationModal from './NotificationModal';
 
 const notificationInfo = {
@@ -29,59 +25,75 @@ const notificationInfo = {
   },
 };
 
-export default function Notification() {
-  const option = OPTION_TYPE.RECEIVE;
-
+export default function Notification({ data }) {
+  const [isViewed, setIsViewed] = useState(data.is_viewed);
   const openModal = useRef(null);
-  const handleClick = () => {
+
+  const clickOpenModal = () => {
+    setIsViewed(true);
     openModal?.current?.open();
   };
 
+  const clickCloseModal = () => {
+    openModal?.current?.close();
+  };
+
+  const date = new Date(data.created_at).toLocaleDateString();
+
   return (
-    <View style={styles.container}>
-      <View style={styles.notificationContainer}>
-        <LinearGradient
-          colors={[COLORS.PRIMARY, 'rgba(0, 0, 0, 0.7)']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.circle}
-        >
-          <Image source={notificationInfo[option].notificationImg} style={styles.optionIcon} />
-        </LinearGradient>
-        <View style={styles.notificationMessegeInfo}>
-          <Text style={styles.notificationMessege}>You received money from John Doe</Text>
-          <Text style={styles.notificationMessegeTime}>12 minutes ago</Text>
+    <TouchableOpacity onPress={clickOpenModal}>
+      <View style={styles.container}>
+        <View style={styles.notificationContainer}>
+          <LinearGradient
+            colors={[COLORS.PRIMARY, 'rgba(0, 0, 0, 0.7)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.circle}
+          >
+            <Image source={notificationInfo[data.type].notificationImg} style={styles.optionIcon} />
+          </LinearGradient>
+          <View style={styles.notificationMessegeInfo}>
+            <Text style={styles.notificationMessege}>{data.type}</Text>
+          </View>
         </View>
-      </View>
-      <TouchableOpacity onPress={handleClick}>
-        <Text style={styles.notificationButtonText}>...</Text>
-      </TouchableOpacity>
-      <View style={styles.notificationModal}>
+        <View style={styles.optionContainer}>
+          <TouchableOpacity style={styles.optionsButton}>
+            <Text>...</Text>
+          </TouchableOpacity>
+          <View style={styles.optionSubContainer}>
+            <TouchableOpacity>
+              <Text style={styles.optionText}>Mark as read</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={styles.optionText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         <NotificationModal ref={openModal}>
-          <Text style={styles.modalHeaderText}>Recieved Money</Text>
-          <Text style={styles.modalDateText}>December 18, 2023 3:47 PM </Text>
-          <Text style={styles.modalContentText}>
-            You have received a $1000 deposit from John Doe. Your new account balance is $50,000 as
-            of 12-18-23 at 3:47 PM. Transaction Number: 1234345. Thank you for using our services!
-          </Text>
+          <Text style={styles.modalHeaderText}>Received Money</Text>
+          <Text style={styles.modalDateText}>{date}</Text>
+          <Text style={styles.modalContentText}>{data.source}</Text>
+          <TouchableOpacity onPress={clickCloseModal} style={styles.closeModalButton}>
+            <Text style={styles.closeText}>Close</Text>
+          </TouchableOpacity>
         </NotificationModal>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     padding: 15,
     backgroundColor: '#FFF',
-    borderRadius: 12,
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    marginBottom: 11,
-    height: 100,
+    height: 70,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D9D9D9',
   },
   notificationContainer: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
@@ -90,20 +102,13 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 100,
-    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 10,
   },
   optionIcon: {
     width: 25,
     height: 25,
-  },
-  notificationMessegeContainer: {
-    flex: 1,
-    marginTop: 10,
-  },
-  notificationAllMessege: {
-    marginTop: 15,
   },
   notificationMessegeInfo: {
     flex: 1,
@@ -112,26 +117,25 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY.POPPINS_REGULAR,
     fontSize: FONT_SIZE.REGULAR,
   },
-  notificationMessegeTime: {
-    color: COLORS.DARK_GRAY,
-    fontSize: FONT_SIZE.SMALL,
+  optionContainer: {
+    position: 'relative',
+    marginLeft: 'auto',
+    overflow:'visible'
   },
-  notificationButtonText: {
-    fontFamily: FONT_FAMILY.POPPINS_BOLD,
-    color: COLORS.DARK_GRAY,
-    fontSize: FONT_SIZE.LARGE,
+  optionsButton: {
+    fontSize: FONT_SIZE.LARGE + 10,
   },
-  notificationMessegeAll: {
-    fontFamily: FONT_FAMILY.POPPINS_REGULAR,
-    fontSize: FONT_SIZE.REGULAR,
-  },
-  notificationContent: {
-    flex: 1,
+  optionSubContainer: {
     position: 'absolute',
-    backgroundColor: 'red',
+    width: 100,
+    backgroundColor: COLORS.PRIMARY,
+    elevation: 5,
+    zIndex: 1,
+    marginLeft: -85,
+    marginTop: 20,
   },
-  notificationModal: {
-    position: 'absolute',
+  optionText: {
+    padding: 10,
   },
   modalHeaderText: {
     color: COLORS.PRIMARY,
@@ -148,5 +152,17 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     lineHeight: 23,
     marginTop: 20,
+  },
+  closeModalButton: {
+    backgroundColor: COLORS.PRIMARY,
+    alignSelf: 'center',
+    borderRadius: 10,
+    marginTop: 15,
+    padding: 10,
+  },
+  closeText: {
+    fontFamily: FONT_FAMILY.POPPINS_REGULAR,
+    fontSize: FONT_SIZE.REGULAR,
+    color: COLORS.WHITE,
   },
 });
