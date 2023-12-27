@@ -4,9 +4,24 @@ const sqlFunction = require('../helpers/sqlFunction')
 const expo = new Expo()
 module.exports = class blockchainController {
     static blockNotify = async (req, res) => {
+        this.proccessNotifications(req)
+        res.status(200).json({
+            message: 'Ok',
+        })
+    }
+
+    static proccessNotifications = async (req) => {
         const utxos = req.body.utxos
         const stxos = req.body.stxos
         const txs = req.body.block.transactions
+
+        const txsMap = new Map()
+
+        for (let tx of txs) {
+            if (!txsMap.get(tx.tx_id)) {
+                txsMap.set(tx.tx_id, tx)
+            }
+        }
 
         let senderWallets = stxos.map((stxo) => stxo.address)
 
@@ -20,35 +35,84 @@ module.exports = class blockchainController {
             return accumulator
         }, [])
 
-        const receiverAddress = receiverUtxos.map((utxo) => utxo.address)
+        const receiverAddressList = receiverUtxos.flatMap(
+            (utxo) => utxo.address
+        )
 
-        if (receiverAddress.length > 0) {
-           
-            try {
-                const joinedAddress = receiverAddress.join("','")
-                // const pushTokens =
-                //     await sqlFunction.getWalletPushTokens(joinedAddress)
-                //     let notifications = pushTokens.map(pushToken => (
-                //       {
-                //         to: pushToken.push_token,
-                //         title: 'Aga Wallet',
-                //         body: 'You received $20.00',
-                //       }
-                //     ))
-                //     expo.sendPushNotificationsAsync(notifications)
-                return res.status(200).json({
-                    message: 'Ok',
-                })
-            } catch (error) {
-                console.log(error)
-                return res.status(200).json({
-                    message: 'Internal server error',
-                })
+        try {
+            const wallets =
+                await sqlFunction.getWalletByAddress(receiverAddressList)
+            const walletMap = new Map()
+
+            for (let wallet of wallets) {
+                if (!walletMap.get(wallet.wallet_address)) {
+                    delete wallet.private_key
+                    delete wallet.public_key
+                    walletMap.set(wallet.wallet_address, wallet)
+                }
             }
-        }
 
-        res.status(200).json({
-            message: 'Ok',
-        })
+            for (let utxo of receiverUtxos) {
+                if (walletMap.get(utxo.address)) {
+                    const wallet = walletMap.get(utxo.address)
+                    walletMap.set(wallet.wallet_address, { ...wallet, ...utxo })
+                }
+            }
+
+            const notifications = Array.from(walletMap.values()).flatMap(
+                (data) => {
+                    const firstTxIn = txsMap.get(data.tx_id).tx_ins[0]
+                    const txInTxOutId = firstTxIn.tx_out_id
+                    const txInTxOutIndex = firstTxIn.tx_out_index
+
+                    let stxo = stxos.find(
+                        (stxo) =>
+                            stxo.tx_out_id === txInTxOutId &&
+                            stxo.tx_out_index === txInTxOutIndex
+                    )
+                    const receiverAddr = data.address
+
+                    return {
+                        userId: data.user_id,
+                        type: 'RECEIVED_ASSETS',
+                        title: 'Received Asset',
+                        description: `Your wallet ${
+                            receiverAddr ? receiverAddr : ''
+                        } received ${data.amount} of AGA Coin from ${
+                            stxo ? stxo.address : ''
+                        }`,
+                    }
+                }
+            )
+
+            const notificationResult = await sqlFunction.insertBulkNotifications(notifications)
+            const userIdList = notificationResult.map(user => user.user_id);
+            //Make sure the the payload is an array of user id.
+            const usersPushTokens = await sqlFunction.getPushTokens(userIdList);
+            let pushNotification = [];
+            
+            for (let notification of notificationResult) {
+                const userPushToken = usersPushTokens.find(userPushToken => userPushToken.user_id === notification.user_id);
+                pushNotification.push({ ...userPushToken, ...notification})
+            }
+
+            console.log("Final Push notification", pushNotification)
+
+            // try {
+            //     expo.sendPushNotificationsAsync([
+            //         {
+            //             to: req.body.expo_id,
+            //             title: 'Aga Wallet',
+            //             body: 'You received $20.00',
+            //         },
+            //     ])
+            // } catch (error) {
+            //     res.status(500).json({
+            //         message: 'Internal server error',
+            //     })
+            // }
+        } catch (error) {
+            console.log(error)
+        }
     }
 }

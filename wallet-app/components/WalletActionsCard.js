@@ -110,7 +110,7 @@ export default function WalletActionsCard({ navigation, wallet }) {
               <Image source={SearchIcon} style={styles.searchIcon}></Image>
             </View>
           </View>
-          <ScrollView showsVerticalScrollIndicator={false} style={styles.sendAssetScrollView}>
+          <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false} style={styles.sendAssetScrollView}>
             <Text style={styles.availableAssetsText}>Available Assets</Text>
             <View style={styles.assetsListContainer}>
               {assets.map((asset, index) => {

@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import ArrowLeftV2 from '../assets/arrow-left-v2.png';
 import { genericPostRequest } from '../services/api/genericPostRequest';
@@ -44,7 +45,7 @@ const signUpSteps = [
 
 export default function SignUpScreen({ navigation }) {
   const walletsContext = useWallets();
-  const { updateUser } = useUser();
+  const { registerUser } = useUser();
   const { signIn } = useAuth();
 
   const [stepIndex, setStepIndex] = useState(0);
@@ -134,27 +135,24 @@ export default function SignUpScreen({ navigation }) {
           passcode: 1234,
         });
 
+        const keys = ['@AgaWallet_WALLETS', '@AgaWallet_TOKEN'];
+        await AsyncStorage.multiRemove(keys);
+
         const userData = res?.user ?? {};
         const walletsData = res?.wallets ?? [];
         const tokenData = res?.token ?? '';
 
-        const user = ['@AgaWallet_USER', JSON.stringify(userData)];
         const wallets = ['@AgaWallet_WALLETS', JSON.stringify(walletsData)];
         const token = ['@AgaWallet_TOKEN', JSON.stringify(tokenData)];
 
-        await AsyncStorage.multiSet([user, wallets, token]);
+        await AsyncStorage.multiSet([wallets, token]);
 
-        updateUser(userData);
         walletsContext.updateWallets(walletsData);
         if (walletsData?.length > 0) {
           walletsContext?.updateSelectedWallet(walletsData[0]);
         }
-        await AsyncStorage.multiSet([user, wallets, token]);
 
-        const socket = io(process.env.EXPO_PUBLIC_SOCKET_URL, {
-          transports: ['websocket'],
-        });
-        socket.emit('setUserID', { userID: userData?.id ?? '' });
+        registerUser({ user: userData });
         signIn({ token: tokenData });
       } catch (error) {
         console.log(error);
@@ -177,7 +175,7 @@ export default function SignUpScreen({ navigation }) {
   const stepNumber = stepIndex + 1;
 
   return (
-    <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
       <View style={styles.signUpStepperContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
@@ -187,6 +185,7 @@ export default function SignUpScreen({ navigation }) {
         </Text>
       </View>
       <ScrollView
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         style={styles.container}
@@ -270,7 +269,7 @@ const styles = StyleSheet.create({
   },
   signUpStepperContainer: {
     paddingHorizontal: 30,
-    marginTop: 50,
+    marginTop: Platform.OS == 'ios' ? 30 : 50,
     paddingVertical: 15,
     display: 'flex',
     flexDirection: 'row',
@@ -289,7 +288,7 @@ const styles = StyleSheet.create({
     color: COLORS.BLACK,
   },
   headerTextSecond: {
-    marginTop: -30,
+    marginTop: Platform.OS == 'ios' ? -20 : -30,
     fontSize: FONT_SIZE.EXTRA_LARGE + 12,
     fontFamily: FONT_FAMILY.POPPINS_SEMI_BOLD,
     color: COLORS.PRIMARY,
@@ -304,6 +303,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 10,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     backgroundColor: COLORS.PRIMARY,
     width: '100%',
     height: 55,

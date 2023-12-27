@@ -87,7 +87,8 @@ export default function NotificationScreen({ navigation }) {
       </View>
 
       <ScrollView
-        // contentContainerStyle={styles.recentContainer}
+        scrollEventThrottle={16}
+        contentContainerStyle={styles.recentContainer}
         style={styles.mainContainer}
         showsVerticalScrollIndicator={false}
         // onMomentumScrollEnd={handleLoadMore}

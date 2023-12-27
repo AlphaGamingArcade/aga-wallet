@@ -30,6 +30,10 @@ const styles = StyleSheet.create({
   cardContainer: {
     padding: 15,
     elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     borderRadius: 5,
     backgroundColor: '#ffffff',
     display: 'flex',

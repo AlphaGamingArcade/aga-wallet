@@ -81,7 +81,7 @@ export default function SendAmountScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
@@ -101,6 +101,7 @@ export default function SendAmountScreen({ navigation }) {
         </View>
       </View>
       <ScrollView
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
   },
   topNavigationContainer: {
     paddingHorizontal: 25,
-    marginTop: 50,
+    marginTop: Platform.OS == 'ios' ? 20 : 30,
     paddingVertical: 15,
     display: 'flex',
     flexDirection: 'row',
@@ -215,6 +216,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.PRIMARY,
     borderRadius: 10,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   changeText: {
     color: COLORS.WHITE,
@@ -273,6 +278,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 10,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     backgroundColor: COLORS.PRIMARY,
     width: '100%',
     height: 55,

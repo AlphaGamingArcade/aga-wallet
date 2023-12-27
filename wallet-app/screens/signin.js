@@ -19,7 +19,6 @@ import LockIcon from '../assets/lock-icon.png';
 import WalletLogo from '../assets/aga-wallet-logo.png';
 import { useUser } from '../services/store/user/userContext';
 import { useWallets } from '../services/store/wallets/walletsContext';
-import io from 'socket.io-client';
 import { useAuth } from '../services/store/auth/AuthContext';
 
 export default function SignInScreen({ navigation }) {
@@ -37,12 +36,21 @@ export default function SignInScreen({ navigation }) {
 
   const onPressSubmit = async () => {
     try {
+      if (phone.length <= 0) {
+        setError({ title: `Login failed`, message: 'Phone number is empty' });
+        return errorAlertRef.current?.show();
+      }
+      if (password.length <= 0) {
+        setError({ title: `Login failed`, message: 'Password is empty' });
+        return errorAlertRef.current?.show();
+      }
+
       setStatus(APP_STATUS.LOADING);
       const res = await genericPostRequest('users/signin', {
         phone_number: phoneNumber,
         password: password,
       });
-      const keys = ['@AgaWallet_WALLETS', '@AgaWallet_TOKEN'];
+      const keys = ['@AgaWallet_WALLETS'];
       await AsyncStorage.multiRemove(keys);
 
       const userData = res?.user ?? {};
@@ -50,20 +58,12 @@ export default function SignInScreen({ navigation }) {
       const tokenData = res?.token ?? '';
 
       const wallets = ['@AgaWallet_WALLETS', JSON.stringify(walletsData)];
-      const token = ['@AgaWallet_TOKEN', JSON.stringify(tokenData)];
-
-      await AsyncStorage.multiSet([wallets, token]);
+      await AsyncStorage.multiSet([wallets]);
 
       walletsContext.updateWallets(walletsData);
       if (walletsData?.length > 0) {
         walletsContext?.updateSelectedWallet(walletsData[0]);
       }
-
-      // const socket = io(process.env.EXPO_PUBLIC_SOCKET_URL, {
-      //   transports: ['websocket'],
-      // });
-
-      // socket.emit('setUserID', { userID: userData?.id ?? '' });
 
       registerUser({ user: userData });
       signIn({ token: tokenData });
@@ -82,9 +82,10 @@ export default function SignInScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
       <View style={styles.container}>
         <ScrollView
+          scrollEventThrottle={16}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           style={styles.scrollView}
@@ -271,6 +272,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 10,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     backgroundColor: COLORS.PRIMARY,
     width: '100%',
     height: 55,

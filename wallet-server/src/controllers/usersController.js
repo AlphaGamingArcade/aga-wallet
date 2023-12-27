@@ -71,7 +71,10 @@ module.exports = class useController {
                 }, 0)
 
             const sqlSignup = await sqlFunction.signup(params)
-            const { ...user } = sqlSignup.data
+            const user = sqlSignup.data
+            delete user.password
+            delete user.passcode
+
             const token = sqlFunction.createToken(user.id)
 
             res.status(200).json({
@@ -98,7 +101,7 @@ module.exports = class useController {
             tablename: 'users',
             condition: `phone_number = '${phoneNumber}'`,
         }
-        
+
         try {
             const sqlLogin = await sqlFunction.login(findUser)
             const match = await bcrypt.compare(

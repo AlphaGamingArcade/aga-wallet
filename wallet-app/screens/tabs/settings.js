@@ -1,27 +1,17 @@
-import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
-  Dimensions,
-  StatusBar,
   Text,
   TouchableOpacity,
   View,
   Image,
   ScrollView,
-  ImageBackground,
-  Pressable,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import indexBG from '../../assets/index-bg.png';
-import leftArrowIcon from '../../assets/arrow-left.png';
 import exhangeCurrencyIcon from '../../assets/exchange-currency-icon.png';
 import lockIconRed from '../../assets/lock-icon-red.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE } from '../../utils/app_constants';
 import ArrowLeftV2 from '../../assets/arrow-left-v2.png';
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-const statusBarHeight = StatusBar.currentHeight || 0;
 
 export default function SettingsTab({ navigation }) {
   const onPressBack = () => {
@@ -29,7 +19,7 @@ export default function SettingsTab({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
@@ -39,6 +29,7 @@ export default function SettingsTab({ navigation }) {
         <Text style={styles.headerText}>Settings</Text>
       </View>
       <ScrollView
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -90,7 +81,7 @@ const styles = StyleSheet.create({
   },
   topNavigationContainer: {
     paddingHorizontal: 25,
-    marginTop: 50,
+    marginTop: Platform.OS == 'ios' ? 20 : 30,
     paddingVertical: 15,
     display: 'flex',
     flexDirection: 'row',
@@ -122,7 +113,11 @@ const styles = StyleSheet.create({
   },
   settingsItem: {
     width: '100%',
-    elevation: 4,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     backgroundColor: '#ffffff',
     padding: 15,
     height: 'auto',

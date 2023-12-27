@@ -100,7 +100,7 @@ export default function PasscodeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView style={styles.upperContainer}>
+      <KeyboardAvoidingView behavior='height' style={styles.upperContainer}>
         <Image style={styles.agaLogo} source={AgaLogoFull} />
         <View style={styles.passcodeContainer}>
           <Text style={styles.headerText}>AGA Wallet</Text>
@@ -231,6 +231,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     backgroundColor: 'black',
     width: 280,
   },

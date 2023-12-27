@@ -23,13 +23,21 @@ export default function MainNavigation({ onLoadLayout }) {
         {!isAppAuthReady && <MainStack.Screen name="loading" component={LoadingScreen} />}
         {state.userToken == null ? (
           <MainStack.Group>
-            <MainStack.Screen name="signin" component={SignInScreen} />
+            <MainStack.Screen
+              options={{ animation: 'none' }}
+              name="signin"
+              component={SignInScreen}
+            />
             <MainStack.Screen name="passcode" component={PasscodeScreen} />
             <MainStack.Screen name="signup" component={SignUpScreen} />
           </MainStack.Group>
         ) : (
           <MainStack.Group>
-            <MainStack.Screen name="index" component={IndexScreen} />
+            <MainStack.Screen
+              options={{ animation: 'fade_from_bottom' }}
+              name="index"
+              component={IndexScreen}
+            />
             <MainStack.Screen name="send-asset" component={SendAssetScreen} />
             <MainStack.Screen name="send-status" component={SendStatusScreen} />
             <MainStack.Screen name="send-amount" component={SendAmountScreen} />

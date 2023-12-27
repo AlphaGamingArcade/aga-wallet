@@ -23,6 +23,7 @@ export default function ProfileDrawer({ navigation, onClose }) {
         </View>
       </View>
       <ScrollView
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         style={styles.container}
@@ -54,6 +55,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingVertical: 23,
+    height: '100%',
   },
   container: {
     flex: 1,
