@@ -8,35 +8,26 @@ module.exports = class sqlFunction {
 
     static getWalletByAddress = async (wallets_list) => {
         if (wallets_list.length <= 0) {
-            return [];
+            return []
         }
-        const db = await connectDb();
+        const db = await connectDb()
         try {
-            const formattedAddresses = wallets_list.map(address => `'${address}'`).join(', ');
+            const formattedAddresses = wallets_list
+                .map((address) => `'${address}'`)
+                .join(', ')
             const query = await db
                 .request()
-                .query(`select * from wallets where wallet_address in (${formattedAddresses})`);
-            const result = Object.values(query.recordset);
-            return result;
+                .query(
+                    `select * from wallets where wallet_address in (${formattedAddresses})`
+                )
+            const result = Object.values(query.recordset)
+            return result
         } catch (error) {
-            const message = 'An error occurred while getting wallets by address.';
-            throw new Error(message);
+            const message =
+                'An error occurred while getting wallets by address.'
+            throw new Error(message)
         }
     }
-
-    // static getWalletKeys = async () => {
-    //     try {
-    //         const walletRes = await axios.get(`${ process.env.BLOCKCHAIN_URL }/wallet`);
-    //         const { secret_key, public_key, public_address } = walletRes.data;
-    //         return {
-    //             secretKey: secret_key,
-    //             publicKey: public_key,
-    //             publicAddress: public_address
-    //         };
-    //     } catch (error) {
-    //         throw new Error("Internal Server Error");
-    //     }
-    // }
     static isWalletAddressExists = async (wallet_address) => {
         const db = await connectDb()
         try {
@@ -324,37 +315,37 @@ module.exports = class sqlFunction {
     }
 
     static updatePushTokenUser = async (userId, platform, token) => {
-        const db = await connectDb();
+        const db = await connectDb()
         try {
             const query = await db
                 .request()
-                .query(`UPDATE push_tokens SET user_id = '${userId}', platform = '${platform}' OUTPUT INSERTED.* WHERE token = '${token}'`)
-    
-            return query;
+                .query(
+                    `UPDATE push_tokens SET user_id = '${userId}', platform = '${platform}' OUTPUT INSERTED.* WHERE token = '${token}'`
+                )
+
+            return query
         } catch (error) {
-            const message = 'An error occurred while updating push token ss';
-            throw new Error(message);
+            const message = 'An error occurred while updating push token ss'
+            throw new Error(message)
         }
-    };
+    }
 
     static createPushToken = async (userId, platform, token) => {
-        const db = await connectDb();
-        
+        const db = await connectDb()
+
         try {
-            const query = await db
-                .request()
-                .query(`
+            const query = await db.request().query(`
                     INSERT INTO push_tokens (user_id, token, platform)
                     OUTPUT INSERTED.*
                     VALUES ('${userId}', '${token}', '${platform}')
-                `);
-    
-            return query.recordset.length > 0;
+                `)
+
+            return query.recordset.length > 0
         } catch (error) {
-            const message = 'An error occurred while registering push token';
-            throw new Error(message);
+            const message = 'An error occurred while registering push token'
+            throw new Error(message)
         }
-    };
+    }
 
     static registerNotifications = async (notificationList) => {
         const db = await connectDb()
@@ -368,6 +359,46 @@ module.exports = class sqlFunction {
         } catch (error) {
             const message = 'An error occurred while signing up.'
             throw new Error(message)
+        }
+    }
+
+    static insertBulkNotifications = async (notificationList) => {
+        if (notificationList.length === 0) {
+            return []
+        }
+        const db = await connectDb()
+        try {
+            const valuesString = notificationList.map((notification) =>`('${notification.userId}', '${notification.type}', '${notification.title}', '${notification.description}')`).join(', ')
+            const result = await db.query(`INSERT INTO notifications (user_id, type, title, description) OUTPUT INSERTED.* VALUES ${valuesString}`)
+
+            const returnedArray = Object.values(result.recordset);
+            return returnedArray
+        } catch (error) {
+            const message = 'An error occurred while inserting notifications.'
+            throw new Error(message)
+        } finally {
+            // Close the database connection if necessary
+            await db.close()
+        }
+    }
+
+    static getPushTokens = async (userIdList) => {
+        if (userIdList.length === 0) {
+            return []
+        }
+
+        const db = await connectDb()
+        try {
+            const valuesString = userIdList.map((userId) =>`'${userId}'`).join(', ')
+            const result = await db.query(`SELECT * FROM PUSH_TOKENS WHERE user_id in (${valuesString})`)
+            const returnedArray = Object.values(result.recordset);
+            return returnedArray
+        } catch (error) {
+            const message = 'An error occurred while retrieving push tokens.'
+            throw new Error(message)
+        } finally {
+            // Close the database connection if necessary
+            await db.close()
         }
     }
 }

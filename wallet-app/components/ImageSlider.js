@@ -46,6 +46,7 @@ export default function ImageSlider() {
   return (
     <View style={styles.container}>
       <ScrollView
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         horizontal

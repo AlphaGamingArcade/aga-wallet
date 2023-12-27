@@ -43,32 +43,23 @@ const CustomDrawer = forwardRef(function CustomDrawer(props, ref) {
 
   return (
     <Modal transparent visible={visible} statusBarTranslucent onRequestClose={closeDrawer}>
-      <SafeAreaView style={styles.container}>
-        <TouchableWithoutFeedback onPress={closeDrawer}>
-          <Animated.View
-            style={[
-              styles.backDrop,
-              {
-                opacity: translateX.interpolate({
-                  inputRange: [0, Dimensions.get('window').width / 2],
-                  outputRange: [1, 0],
-                  extrapolate: 'clamp',
-                }),
-              },
-            ]}
-          />
-        </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback onPress={closeDrawer}>
         <Animated.View
           style={[
-            styles.bottomSheet,
+            styles.backDrop,
             {
-              transform: [{ translateX }],
+              opacity: translateX.interpolate({
+                inputRange: [0, Dimensions.get('window').width / 2],
+                outputRange: [1, 0],
+                extrapolate: 'clamp',
+              }),
             },
           ]}
-        >
-          <View style={styles.content}>{props.children}</View>
-        </Animated.View>
-      </SafeAreaView>
+        />
+      </TouchableWithoutFeedback>
+      <Animated.View style={[styles.bottomSheet, { transform: [{ translateX }] }]}>
+        <View style={styles.content}>{props.children}</View>
+      </Animated.View>
     </Modal>
   );
 });

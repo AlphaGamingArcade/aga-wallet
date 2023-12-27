@@ -25,7 +25,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFF',
     borderRadius: 12,
+    //Android
     elevation: 5,
+    //IOS
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     margin: 0,
     padding: 0,
     paddingBottom: 25,

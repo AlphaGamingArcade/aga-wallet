@@ -37,11 +37,11 @@ export default function SignInScreen({ navigation }) {
   const onPressSubmit = async () => {
     try {
       if (phone.length <= 0) {
-        setError({ title: `Login failed`, message: "Phone number is empty" });
+        setError({ title: `Login failed`, message: 'Phone number is empty' });
         return errorAlertRef.current?.show();
       }
       if (password.length <= 0) {
-        setError({ title: `Login failed`, message: "Password is empty" });
+        setError({ title: `Login failed`, message: 'Password is empty' });
         return errorAlertRef.current?.show();
       }
 
@@ -82,9 +82,10 @@ export default function SignInScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
       <View style={styles.container}>
         <ScrollView
+          scrollEventThrottle={16}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           style={styles.scrollView}
@@ -271,6 +272,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 10,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     backgroundColor: COLORS.PRIMARY,
     width: '100%',
     height: 55,

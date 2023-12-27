@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   optionName: {
     fontFamily: FONT_FAMILY.POPPINS_REGULAR,
-    fontSize: FONT_SIZE.REGULAR + 2,
+    fontSize: FONT_SIZE.REGULAR,
   },
   icon: {
     width: 32,

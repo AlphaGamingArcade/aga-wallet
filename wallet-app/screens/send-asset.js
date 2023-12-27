@@ -88,7 +88,7 @@ export default function SendAssetScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
@@ -98,6 +98,7 @@ export default function SendAssetScreen({ navigation }) {
         <Text style={styles.headerText}>Send Asset</Text>
       </View>
       <ScrollView
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -165,7 +166,7 @@ export default function SendAssetScreen({ navigation }) {
             <Image source={SearchIcon} style={styles.searchIcon}></Image>
           </View>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.sendAssetScrollView}>
+        <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false} style={styles.sendAssetScrollView}>
           <Text style={styles.availableAssetsText}>Available Assets</Text>
           <View style={styles.assetsListContainer}>
             {assets.map((asset, index) => {
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
   },
   topNavigationContainer: {
     paddingHorizontal: 25,
-    marginTop: 50,
+    marginTop: Platform.OS == 'ios' ? 20 : 30,
     paddingVertical: 15,
     display: 'flex',
     flexDirection: 'row',
@@ -356,6 +357,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 10,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     backgroundColor: COLORS.PRIMARY,
     width: '100%',
     height: 55,

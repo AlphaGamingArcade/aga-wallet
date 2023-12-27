@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import filterIcon from '../../assets/filter-icon-gray.png';
 import TransactionCard from '../../components/TransactionCard';
-import { BOTTOM_TAB_HEIGHT, COLORS, FONT_FAMILY, FONT_SIZE } from '../../utils/app_constants';
+import { COLORS, FONT_FAMILY, FONT_SIZE } from '../../utils/app_constants';
 import ArrowLeftV2 from '../../assets/arrow-left-v2.png';
 
 const transactionItems = [
@@ -82,7 +82,7 @@ export default function TransactionsTab({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
@@ -93,6 +93,7 @@ export default function TransactionsTab({ navigation }) {
         <Image style={styles.filterIcon} source={filterIcon} />
       </View>
       <ScrollView
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
   },
   topNavigationContainer: {
     paddingHorizontal: 25,
-    marginTop: 50,
+    marginTop: Platform.OS == 'ios' ? 20 : 30,
     paddingVertical: 15,
     display: 'flex',
     flexDirection: 'row',
