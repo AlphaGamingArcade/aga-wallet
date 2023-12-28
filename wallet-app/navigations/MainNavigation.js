@@ -11,6 +11,7 @@ import LoadingScreen from '../screens/loading';
 import SendAssetScreen from '../screens/send-asset';
 import SendStatusScreen from '../screens/send-status';
 import SendAmountScreen from '../screens/send-amount';
+import BarCodeScannerScreen from '../screens/bar-code-scanner';
 
 const MainStack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ export default function MainNavigation({ onLoadLayout }) {
               name="index"
               component={IndexScreen}
             />
+            <MainStack.Screen name="bar-code-scanner" options={{ animation: 'none', headerShown: true }} component={BarCodeScannerScreen} />
             <MainStack.Screen name="send-asset" component={SendAssetScreen} />
             <MainStack.Screen name="send-status" component={SendStatusScreen} />
             <MainStack.Screen name="send-amount" component={SendAmountScreen} />

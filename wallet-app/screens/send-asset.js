@@ -16,7 +16,7 @@ import SearchIcon from '../assets/search-icon.png';
 import ArrowLeftV2 from '../assets/arrow-left-v2.png';
 import ArrowDownIcon from '../assets/carret-down.png';
 import InfoImg from '../assets/info-circle-icon.png';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomBottomSheet from '../components/CustomBottomSheet';
 import AssetResultCard from '../components/AssetItemCard';
 import { useNetworkAssets } from '../services/store/networkAssets/networkAssetsContext';
@@ -88,7 +88,7 @@ export default function SendAssetScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoidingView}>
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
@@ -111,12 +111,17 @@ export default function SendAssetScreen({ navigation }) {
           </Pressable>
           <Text style={styles.sendAssetInfoText}>Who are you sending to?</Text>
         </View>
-        <TextInput
-          style={styles.input}
-          value={receiverAddress}
-          placeholder="e.g : 16HFHicyvB9RXFTxrBazas... "
-          onChangeText={onChangeReceiverAddress}
-        />
+        <View style={styles.receiverAddrInputContainer}>
+          <TextInput
+            style={styles.receiverAddrInput}
+            value={receiverAddress}
+            placeholder="e.g : 16HFHicyvB9RXFTxrBazas... "
+            onChangeText={onChangeReceiverAddress}
+          />
+          <TouchableOpacity style={styles.qrCodeBtn} onPress={() => navigation.navigate("bar-code-scanner")}>
+            <Ionicons name="qr-code-outline" size={24} color={COLORS.BLACK} />
+          </TouchableOpacity>
+        </View>
         {isVerifyingReveiverAddr && hasInputAddress && (
           <Text style={styles.successText}>Verifying...</Text>
         )}
@@ -166,7 +171,11 @@ export default function SendAssetScreen({ navigation }) {
             <Image source={SearchIcon} style={styles.searchIcon}></Image>
           </View>
         </View>
-        <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false} style={styles.sendAssetScrollView}>
+        <ScrollView
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
+          style={styles.sendAssetScrollView}
+        >
           <Text style={styles.availableAssetsText}>Available Assets</Text>
           <View style={styles.assetsListContainer}>
             {assets.map((asset, index) => {
@@ -242,6 +251,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Poppins-SemiBold',
   },
+  receiverAddrInputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+  },
+  qrCodeBtn: {
+    paddingHorizontal: 15,
+    paddingVertical: 10
+  },
   coinContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -289,12 +309,11 @@ const styles = StyleSheet.create({
   activeButtonText: {
     color: '#000',
   },
-  input: {
+  receiverAddrInput: {
     height: 50,
-    width: '100%',
+    flex: 1,
     backgroundColor: '#FFF',
     paddingLeft: 9,
-    borderBottomWidth: 1,
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5,
     fontSize: 17,

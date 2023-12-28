@@ -79,7 +79,7 @@ export default function HomeTab({ navigation }) {
 
   return (
     <ScrollView
-    scrollEventThrottle={16}
+      scrollEventThrottle={16}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       style={styles.scrollView}
