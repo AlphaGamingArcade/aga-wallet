@@ -23,24 +23,22 @@
 //   const [notifications, setNotifications] = useState([]);
 //   const activeX = useRef(new Animated.Value(0)).current;
 
-  // const fetchData = useCallback(async () => {
-  //   try {
-  //     const response = await genericGetRequest(`users/notification`);
-  //     setNotifications(response.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // },[])
-  
+// const fetchData = useCallback(async () => {
+//   try {
+//     const response = await genericGetRequest(`users/notification`);
+//     setNotifications(response.data);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// },[])
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+// useEffect(() => {
+//   fetchData();
+// }, []);
 
 //   const backButtonHandler = () => {
 //     navigation.goBack();
 //   };
-
 
 //   const onMove = (index) => {
 //     console.log("Rendered")
@@ -179,37 +177,36 @@ import { genericGetRequest } from '../services/api/genericGetRequest';
 import Notification from '../components/Notification';
 
 const FirstRoute = () => {
-    const [notifications, setNotifications] = React.useState([]);
-      const [notif, setNotif] = React.useState('send');
-    const fetchData = React.useCallback(async () => {
+  const [notifications, setNotifications] = React.useState([]);
+  const [notif, setNotif] = React.useState('send');
+  const fetchData = React.useCallback(async () => {
     try {
       const response = await genericGetRequest(`users/notification`);
-      console.log(response.data)
+      console.log(response.data);
       setNotifications(response.data);
     } catch (error) {
       console.log(error);
     }
-  },[])
-  
+  }, []);
 
   React.useEffect(() => {
     fetchData();
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#ff4081' }} >
-         {notifications.map((notification) => {
-          return notification.type === "recieve " && (
+    <View style={{ flex: 1, backgroundColor: '#ff4081' }}>
+      {notifications.map((notification) => {
+        return (
+          notification.type === 'recieve ' && (
             <Notification key={notification.user_id} data={notification} />
-          );
-        })}
+          )
+        );
+      })}
     </View>
   );
-}
+};
 
-const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: '#673ab7' }} />
-);
+const SecondRoute = () => <View style={{ flex: 1, backgroundColor: '#673ab7' }} />;
 
 const renderScene = SceneMap({
   first: FirstRoute,

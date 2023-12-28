@@ -68,7 +68,7 @@ const NotificationModal = forwardRef(function NotificationModal(props, ref) {
       visible={visible}
       statusBarTranslucent
       onRequestClose={closeModal}
-      animationType='fade'
+      animationType="fade"
     >
       <SafeAreaView style={styles.container}>
         <TouchableWithoutFeedback onPress={closeModal}>

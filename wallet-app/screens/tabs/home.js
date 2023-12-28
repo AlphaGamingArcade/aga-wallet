@@ -76,6 +76,13 @@ export default function HomeTab({ navigation }) {
   const onPressClose = () => {
     openDrawerRef.current?.close();
   };
+  
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      onRefresh(userState?.user?.id ?? '')
+    });
+    return unsubscribe;
+  }, [navigation, userState?.user?.id ?? '', onRefresh]);
 
   return (
     <ScrollView

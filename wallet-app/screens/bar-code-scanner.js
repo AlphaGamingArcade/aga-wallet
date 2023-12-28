@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button, Platform } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useSendAssetContext } from '../services/store/sendAsset/sendAssetContext';
+import { COLORS } from '../utils/app_constants';
 
 export default function BarCodeScannerScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const sendAsset = useSendAssetContext()
+  const { updateReceiver } = useSendAssetContext();
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -19,11 +20,8 @@ export default function BarCodeScannerScreen({ navigation }) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    sendAsset.updateTransaction((prevData) => ({
-        ...prevData,
-        to: data
-    }))
-    navigation.pop()
+    updateReceiver(data);
+    navigation.pop();
   };
 
   if (hasPermission === null) {
@@ -37,7 +35,7 @@ export default function BarCodeScannerScreen({ navigation }) {
     <View style={styles.container}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
+        style={styles.barCodeStyle}
       />
       {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
     </View>
@@ -46,8 +44,16 @@ export default function BarCodeScannerScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: COLORS.WHITE,
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  barCodeStyle: {
+    ...StyleSheet.absoluteFillObject,
+    height: '100%',
+    width: '100%',
+    marginTop: Platform.OS == 'ios' ? 0 : -30,
   },
 });

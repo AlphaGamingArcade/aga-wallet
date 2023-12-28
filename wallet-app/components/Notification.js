@@ -1,11 +1,5 @@
 import React, { useState, useRef } from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import ReceiveIcon from '../assets/receive-icon-white.png';
 import UpdatesIcon from '../assets/notification-icon-white.png';
@@ -120,7 +114,7 @@ const styles = StyleSheet.create({
   optionContainer: {
     position: 'relative',
     marginLeft: 'auto',
-    overflow:'visible'
+    overflow: 'visible',
   },
   optionsButton: {
     fontSize: FONT_SIZE.LARGE + 10,

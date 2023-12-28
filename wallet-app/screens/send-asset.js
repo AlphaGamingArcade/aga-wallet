@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import CoinIcon from '../assets/coin.png';
 
 import {
@@ -24,6 +24,7 @@ import { COLORS, FONT_SIZE, FONT_FAMILY } from '../utils/app_constants';
 import { useSendAssetContext } from '../services/store/sendAsset/sendAssetContext';
 import useDebounce from '../hooks/useDebounce';
 import { genericGetRequest } from '../services/api/genericGetRequest';
+import { useFocusEffect } from '@react-navigation/native';
 
 const data = [
   'Mistransferred assets cannot be retrieved due to the nature of the blockchain.',
@@ -34,7 +35,7 @@ const data = [
 export default function SendAssetScreen({ navigation }) {
   const [receiverAddress, onChangeReceiverAddress] = useState('');
   const hasInputAddress = receiverAddress.length > 0;
-  const sendAssetContext = useSendAssetContext();
+  const { transaction, clearTransaction, updateReceiver } = useSendAssetContext();
   const [isVerifiedReceiverAddr, setIsVerifiedReceiverAddr] = useState(false);
   const [isVerifyingReveiverAddr, setIsVerifyingReveiverAddr] = useState(true);
 
@@ -66,7 +67,8 @@ export default function SendAssetScreen({ navigation }) {
   const sendBottomSheetModalRef = useRef(null);
 
   const onPressBack = () => {
-    navigation.goBack();
+    clearTransaction()
+    navigation.pop();
   };
 
   const onPressAsset = () => {
@@ -80,15 +82,19 @@ export default function SendAssetScreen({ navigation }) {
   const assets = networkAssets?.networkAssets ?? [];
 
   const onPressNext = () => {
-    sendAssetContext.updateTransaction((prevData) => ({
-      ...prevData,
-      to: receiverAddress,
-    }));
+    updateReceiver(receiverAddress);
     navigation.navigate('send-amount');
   };
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      onChangeReceiverAddress(transaction?.receiver ?? '');
+    });
+    return unsubscribe;
+  }, [navigation, transaction?.receiver]);
+
   return (
-    <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "height" : ""} style={styles.keyboardAvoidingView}>
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
@@ -106,7 +112,7 @@ export default function SendAssetScreen({ navigation }) {
       >
         <View style={styles.sendAssetHeader}>
           <Pressable style={styles.coinContainer} onPress={onPressAsset}>
-            <Image source={sendAssetContext?.asset?.icon ?? CoinIcon} style={styles.assetIcon} />
+            <Image source={transaction.asset?.icon ?? CoinIcon} style={styles.assetIcon} />
             <Image source={ArrowDownIcon} style={styles.arrowDown}></Image>
           </Pressable>
           <Text style={styles.sendAssetInfoText}>Who are you sending to?</Text>
@@ -118,7 +124,10 @@ export default function SendAssetScreen({ navigation }) {
             placeholder="e.g : 16HFHicyvB9RXFTxrBazas... "
             onChangeText={onChangeReceiverAddress}
           />
-          <TouchableOpacity style={styles.qrCodeBtn} onPress={() => navigation.navigate("bar-code-scanner")}>
+          <TouchableOpacity
+            style={styles.qrCodeBtn}
+            onPress={() => navigation.navigate('bar-code-scanner')}
+          >
             <Ionicons name="qr-code-outline" size={24} color={COLORS.BLACK} />
           </TouchableOpacity>
         </View>
@@ -260,7 +269,7 @@ const styles = StyleSheet.create({
   },
   qrCodeBtn: {
     paddingHorizontal: 15,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   coinContainer: {
     display: 'flex',

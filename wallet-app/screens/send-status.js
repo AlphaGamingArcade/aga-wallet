@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  KeyboardAvoidingView,
   View,
   StyleSheet,
   Text,
@@ -9,14 +8,14 @@ import {
 } from 'react-native';
 import CheckImg from '../assets/check-icon.png';
 import ExImg from '../assets/ex-icon.png';
-import { COLORS, FONT_SIZE, STATUS_TYPE } from '../utils/app_constants';
+import { COLORS, FONT_FAMILY, FONT_SIZE, STATUS_TYPE } from '../utils/app_constants';
 import { useSendAssetContext } from '../services/store/sendAsset/sendAssetContext';
 
 const transactionInfo = {
   success: {
     transaction: 'Your transaction is awaiting inclusion in the next block.',
     transactionImg: CheckImg,
-    transactionText: 'Pending send transaction',
+    transactionText: 'Sending',
     transactionButtonText: 'Done',
   },
   failed: {
@@ -28,11 +27,12 @@ const transactionInfo = {
 };
 
 export default function SendStatusScreen({ route, navigation }) {
-  const sendAssetContext = useSendAssetContext();
+  const { transaction, clearTransaction } = useSendAssetContext();
   const { status } = route.params;
 
   const onPressActionButton = () => {
     if (status === STATUS_TYPE.SUCCESS) {
+      clearTransaction();
       navigation.navigate('index');
     }
     if (status === STATUS_TYPE.FAILED) {
@@ -49,23 +49,23 @@ export default function SendStatusScreen({ route, navigation }) {
           style={styles.transactionImg}
         ></Image>
         <Text style={styles.transactionText}>
-          {transactionInfo[status].transactionText} {sendAssetContext?.asset?.name ?? ''}
+          {transactionInfo[status].transactionText} <Text style={styles.amountText}>{transaction?.amount ?? 0}</Text> {transaction?.asset?.name ?? ''}
         </Text>
         <Text style={styles.toText}>to</Text>
-        <Text style={styles.receiverText}>{sendAssetContext?.transaction?.to ?? ''}</Text>
+        <Text style={styles.receiverText}>{transaction?.receiver ?? ''}</Text>
         <View style={styles.transactonInfoContainer}>
           <View style={styles.dateContainer}>
-            <Text style={styles.transactionDateText}>Transaction Date:</Text>
+            <Text style={styles.transactionDateText}>Date:</Text>
             <Text style={styles.transactionDateValue}>{new Date().toString()}</Text>
           </View>
           <View style={styles.descriptionContainer}>
             <Text style={styles.transactionDescriptionText}>Description:</Text>
             <Text style={styles.transactionDescriptionValue}>Send Asset</Text>
           </View>
-          <View style={styles.transactionHashContainer}>
-            <Text style={styles.transactionHashText}>Transaction Hash:</Text>
+          {/* <View style={styles.transactionHashContainer}>
+            <Text style={styles.transactionHashText}>:</Text>
             <Text style={styles.transactionHashValue}>{'Not set'}</Text>
-          </View>
+          </View> */}
         </View>
         <TouchableOpacity style={styles.button} onPress={onPressActionButton}>
           <Text style={styles.buttonText}>{transactionInfo[status].transactionButtonText}</Text>
@@ -96,13 +96,20 @@ const styles = StyleSheet.create({
   },
   transactionImg: {
     width: 139,
-    height: 139,
-    marginBottom: 62,
+    height: 139
   },
   transactionText: {
     fontFamily: 'Poppins-Medium',
     fontSize: FONT_SIZE.LARGE,
     marginBottom: 3,
+    paddingHorizontal: 30,
+    textAlign: 'center',
+    paddingTop: 30
+  },
+  amountText: {
+    fontFamily: FONT_FAMILY.POPPINS_SEMI_BOLD,
+    fontSize: 26,
+    color: COLORS.PRIMARY
   },
   toText: {
     color: '#838383',
@@ -185,6 +192,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.PRIMARY,
     width: '100%',
     height: 55,
+    marginTop: 'auto',
+    marginBottom: 15
   },
   buttonText: {
     fontFamily: 'Poppins-SemiBold',

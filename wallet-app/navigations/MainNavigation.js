@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import IndexScreen from '../screens';
 import NotificationScreen from '../screens/notification-screen';
@@ -12,12 +12,14 @@ import SendAssetScreen from '../screens/send-asset';
 import SendStatusScreen from '../screens/send-status';
 import SendAmountScreen from '../screens/send-amount';
 import BarCodeScannerScreen from '../screens/bar-code-scanner';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { COLORS } from '../utils/app_constants';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const MainStack = createNativeStackNavigator();
 
 export default function MainNavigation({ onLoadLayout }) {
   const { state, isAppAuthReady } = useAuth();
-
   return (
     <NavigationContainer onReady={onLoadLayout}>
       <MainStack.Navigator screenOptions={{ headerShown: false }}>
@@ -39,7 +41,24 @@ export default function MainNavigation({ onLoadLayout }) {
               name="index"
               component={IndexScreen}
             />
-            <MainStack.Screen name="bar-code-scanner" options={{ animation: 'none', headerShown: true }} component={BarCodeScannerScreen} />
+            <MainStack.Screen
+              name="bar-code-scanner"
+              options={{
+                animation: 'none',
+                headerShown: true,
+                title: 'QR Code Scanner',
+                headerShadowVisible: false,
+                headerLeft: () => {
+                  const navigation = useNavigation();
+                  return (
+                    <TouchableOpacity onPress={() => navigation.pop()} style={styles.backBtn}>
+                      <Ionicons name="arrow-back" size={32} color={COLORS.BLACK} />
+                    </TouchableOpacity>
+                  );
+                },
+              }}
+              component={BarCodeScannerScreen}
+            />
             <MainStack.Screen name="send-asset" component={SendAssetScreen} />
             <MainStack.Screen name="send-status" component={SendStatusScreen} />
             <MainStack.Screen name="send-amount" component={SendAmountScreen} />
@@ -51,3 +70,9 @@ export default function MainNavigation({ onLoadLayout }) {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  backBtn: {
+    paddingRight: 15,
+  },
+});

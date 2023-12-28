@@ -9,6 +9,7 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { COLORS, FONT_SIZE, FONT_FAMILY, APP_STATUS, STATUS_TYPE } from '../utils/app_constants';
 import ArrowLeftV2 from '../assets/arrow-left-v2.png';
@@ -18,11 +19,9 @@ import { useWallets } from '../services/store/wallets/walletsContext';
 import { useAuth } from '../services/store/auth/AuthContext';
 
 export default function SendAmountScreen({ navigation }) {
-  const sendAssetContext = useSendAssetContext();
+  const { transaction, updateAmount } = useSendAssetContext();
   const walletsContext = useWallets();
-  const {
-    state: { userToken },
-  } = useAuth();
+  const { state: { userToken } } = useAuth();
   const userBalance = walletsContext?.selectedWallet?.balance ?? 0;
   const [status, setStatus] = useState(APP_STATUS.IDLE);
 
@@ -51,16 +50,12 @@ export default function SendAmountScreen({ navigation }) {
   const onPressSend = async () => {
     try {
       setStatus(APP_STATUS.LOADING);
-      sendAssetContext.updateTransaction((prevData) => ({
-        ...prevData,
-        amount: parseFloat(amount),
-      }));
-
+      updateAmount(parseFloat(amount))
       await genericPostRequest(
         'transactions',
         {
-          receiver_address: sendAssetContext?.transaction?.to ?? '',
-          sender_address: sendAssetContext?.transaction?.from ?? '',
+          receiver_address: transaction?.receiver ?? '',
+          sender_address: transaction?.sender ?? '',
           amount: parseFloat(amount) ?? 0,
         },
         userToken
@@ -81,18 +76,18 @@ export default function SendAmountScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "height" : ""} style={styles.keyboardAvoidingView}>
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
         </TouchableOpacity>
       </View>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Send {sendAssetContext?.asset?.name} to</Text>
+        <Text style={styles.headerText}>Send {transaction?.asset?.name} to</Text>
         <View style={styles.receiverAddressContainer}>
           <View style={styles.receiverAddressWrapper}>
             <Text style={styles.receiverAddressText}>
-              {sendAssetContext?.transaction?.to ?? ''}
+              {transaction?.receiver ?? ''}
             </Text>
           </View>
           <TouchableOpacity style={styles.changeAddressBtn} onPress={onPressChangeAddress}>
@@ -149,7 +144,7 @@ export default function SendAmountScreen({ navigation }) {
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
-    backgroundColor: COLORS.WHITE,
+    backgroundColor: COLORS.WHITE
   },
   container: {
     flex: 1,
@@ -186,7 +181,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY.POPPINS_BOLD,
   },
   scrollView: {
-    flex: 1,
+    flex: 1
   },
   sendAssetContainer: {
     display: 'flex',
@@ -271,6 +266,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: 'auto',
     paddingBottom: 20,
+    marginTop: 'auto'
   },
   sendButton: {
     display: 'flex',

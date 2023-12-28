@@ -11,8 +11,6 @@ import {
   Platform,
   ToastAndroid,
 } from 'react-native';
-import AgaLogo from '../assets/logo.png';
-import coin from '../assets/coin.png';
 import SendIcon from '../assets/send-icon.png';
 import ReceiveIcon from '../assets/receive-icon.png';
 import BuyIcon from '../assets/buy-icon.png';
@@ -29,7 +27,7 @@ import * as Clipboard from 'expo-clipboard';
 
 export default function WalletActionsCard({ navigation, wallet }) {
   const networkAssets = useNetworkAssets();
-  const sendAssetContext = useSendAssetContext();
+  const { updateAsset,updateSender } = useSendAssetContext();
   const isOnSmallScreen = Dimensions.get('window').height < 675;
 
   const receiveBottomSheetModalRef = useRef(null);
@@ -44,11 +42,8 @@ export default function WalletActionsCard({ navigation, wallet }) {
 
   const onPressSeletAsset = (asset) => {
     sendBottomSheetModalRef.current?.close();
-    sendAssetContext?.updateTransaction((prevData) => ({
-      ...prevData,
-      from: wallet?.wallet_address ?? '',
-      asset,
-    }));
+    updateSender(wallet?.wallet_address ?? '');
+    updateAsset(asset)
     navigation.push('send-asset');
   };
 

@@ -13,12 +13,10 @@ import lockIconRed from '../../assets/lock-icon-red.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE } from '../../utils/app_constants';
 import TabHeader from '../../components/TabHeader';
 
-
 export default function SettingsTab({ navigation }) {
-
   return (
-    <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoidingView}>
-      <TabHeader onPressBack={navigation.goBack} title="Settings"/>
+    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "height" : ""} style={styles.keyboardAvoidingView}>
+      <TabHeader onPressBack={navigation.goBack} title="Settings" />
       <ScrollView
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}

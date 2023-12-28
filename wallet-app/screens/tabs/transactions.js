@@ -80,7 +80,7 @@ const transactionItems = [
 
 export default function TransactionsTab({ navigation }) {
   return (
-    <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "height" : ""} style={styles.keyboardAvoidingView}>
       <TabHeader title="Transactions" onPressBack={navigation.goBack} />
       <ScrollView
         scrollEventThrottle={16}
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 15
+    paddingVertical: 15,
   },
   headerText: {
     fontSize: FONT_SIZE.LARGE + 4,
