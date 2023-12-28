@@ -12,6 +12,8 @@ import filterIcon from '../../assets/filter-icon-gray.png';
 import TransactionCard from '../../components/TransactionCard';
 import { COLORS, FONT_FAMILY, FONT_SIZE } from '../../utils/app_constants';
 import ArrowLeftV2 from '../../assets/arrow-left-v2.png';
+import { Platform } from 'babel-plugin-react-native-web/src/moduleMap';
+import TabHeader from '../../components/TabHeader';
 
 const transactionItems = [
   {
@@ -77,21 +79,9 @@ const transactionItems = [
 ];
 
 export default function TransactionsTab({ navigation }) {
-  const onPressBack = () => {
-    navigation.goBack();
-  };
-
   return (
     <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoidingView}>
-      <View style={styles.topNavigationContainer}>
-        <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
-          <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Transaction</Text>
-        <Image style={styles.filterIcon} source={filterIcon} />
-      </View>
+      <TabHeader title="Transactions" onPressBack={navigation.goBack} />
       <ScrollView
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
@@ -130,6 +120,7 @@ const styles = StyleSheet.create({
   topNavigationContainer: {
     paddingHorizontal: 25,
     marginTop: Platform.OS == 'ios' ? 20 : 30,
+    borderWidth: 2,
     paddingVertical: 15,
     display: 'flex',
     flexDirection: 'row',
@@ -140,7 +131,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 15,
+    paddingVertical: 15
   },
   headerText: {
     fontSize: FONT_SIZE.LARGE + 4,
