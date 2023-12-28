@@ -85,32 +85,34 @@ module.exports = class blockchainController {
                 }
             )
 
-            const notificationResult = await sqlFunction.insertBulkNotifications(notifications)
-            const userIdList = notificationResult.map(user => user.user_id);
+            const notificationResult =
+                await sqlFunction.insertBulkNotifications(notifications)
+            const userIdList = notificationResult.map((user) => user.user_id)
             //Make sure the the payload is an array of user id.
-            const usersPushTokens = await sqlFunction.getPushTokens(userIdList);
-            let pushNotification = [];
-            
+            const usersPushTokens = await sqlFunction.getPushTokens(userIdList)
+
+            let pushNotifications = []
             for (let notification of notificationResult) {
-                const userPushToken = usersPushTokens.find(userPushToken => userPushToken.user_id === notification.user_id);
-                pushNotification.push({ ...userPushToken, ...notification})
+                const userPushToken = usersPushTokens.find(
+                    (userPushToken) =>
+                        userPushToken.user_id === notification.user_id
+                )
+                const intialPushNotification = {
+                    ...userPushToken,
+                    ...notification,
+                }
+                pushNotifications.push({
+                    to: intialPushNotification.token,
+                    title: intialPushNotification.title,
+                    body: intialPushNotification.description,
+                })
             }
-
-            console.log("Final Push notification", pushNotification)
-
-            // try {
-            //     expo.sendPushNotificationsAsync([
-            //         {
-            //             to: req.body.expo_id,
-            //             title: 'Aga Wallet',
-            //             body: 'You received $20.00',
-            //         },
-            //     ])
-            // } catch (error) {
-            //     res.status(500).json({
-            //         message: 'Internal server error',
-            //     })
-            // }
+            
+            try {
+                expo.sendPushNotificationsAsync(pushNotifications ?? [])
+            } catch (error) {
+                console.log(error)
+            }
         } catch (error) {
             console.log(error)
         }

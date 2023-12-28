@@ -368,10 +368,17 @@ module.exports = class sqlFunction {
         }
         const db = await connectDb()
         try {
-            const valuesString = notificationList.map((notification) =>`('${notification.userId}', '${notification.type}', '${notification.title}', '${notification.description}')`).join(', ')
-            const result = await db.query(`INSERT INTO notifications (user_id, type, title, description) OUTPUT INSERTED.* VALUES ${valuesString}`)
+            const valuesString = notificationList
+                .map(
+                    (notification) =>
+                        `('${notification.userId}', '${notification.type}', '${notification.title}', '${notification.description}')`
+                )
+                .join(', ')
+            const result = await db.query(
+                `INSERT INTO notifications (user_id, type, title, description) OUTPUT INSERTED.* VALUES ${valuesString}`
+            )
 
-            const returnedArray = Object.values(result.recordset);
+            const returnedArray = Object.values(result.recordset)
             return returnedArray
         } catch (error) {
             const message = 'An error occurred while inserting notifications.'
@@ -389,9 +396,13 @@ module.exports = class sqlFunction {
 
         const db = await connectDb()
         try {
-            const valuesString = userIdList.map((userId) =>`'${userId}'`).join(', ')
-            const result = await db.query(`SELECT * FROM PUSH_TOKENS WHERE user_id in (${valuesString})`)
-            const returnedArray = Object.values(result.recordset);
+            const valuesString = userIdList
+                .map((userId) => `'${userId}'`)
+                .join(', ')
+            const result = await db.query(
+                `SELECT * FROM PUSH_TOKENS WHERE user_id in (${valuesString})`
+            )
+            const returnedArray = Object.values(result.recordset)
             return returnedArray
         } catch (error) {
             const message = 'An error occurred while retrieving push tokens.'
