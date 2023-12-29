@@ -129,16 +129,6 @@ export default function IndexScreen() {
         },
       })}
     >
-      <Tab.Screen
-        name="token"
-        component={() => (
-          <View
-            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          >
-            <TextInput>{expoPushToken}</TextInput>
-          </View>
-        )}
-      />
       <Tab.Screen name="home" component={HomeTab} />
       <Tab.Screen
         name="transactions"
