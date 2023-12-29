@@ -19,7 +19,7 @@ export default function SettingsTab({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoidingView}>
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>

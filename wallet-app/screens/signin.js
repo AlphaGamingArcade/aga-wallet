@@ -82,7 +82,7 @@ export default function SignInScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoidingView}>
       <View style={styles.container}>
         <ScrollView
           scrollEventThrottle={16}

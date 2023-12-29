@@ -88,7 +88,7 @@ export default function SendAssetScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView behavior='height' style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoidingView}>
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
@@ -166,7 +166,11 @@ export default function SendAssetScreen({ navigation }) {
             <Image source={SearchIcon} style={styles.searchIcon}></Image>
           </View>
         </View>
-        <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false} style={styles.sendAssetScrollView}>
+        <ScrollView
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
+          style={styles.sendAssetScrollView}
+        >
           <Text style={styles.availableAssetsText}>Available Assets</Text>
           <View style={styles.assetsListContainer}>
             {assets.map((asset, index) => {
