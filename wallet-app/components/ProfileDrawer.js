@@ -7,6 +7,7 @@ import InfoIcon from '../assets/info-circle.png';
 import LogoutIcon from '../assets/logout-icon.png';
 import AgaLogo from '../assets/logo.png';
 import { useUser } from '../services/store/user/userContext';
+import Constants from 'expo-constants';
 
 export default function ProfileDrawer({ navigation, onClose }) {
   const { state: userState } = useUser();
@@ -45,7 +46,7 @@ export default function ProfileDrawer({ navigation, onClose }) {
       </ScrollView>
       <View style={styles.profileFooter}>
         <Image source={AgaLogo} style={styles.agaLogo}></Image>
-        <Text style={styles.versionText}>Version 1.1</Text>
+        <Text style={styles.versionText}>Version {Constants.expoConfig.version}</Text>
       </View>
     </View>
   );

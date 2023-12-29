@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Aga Wallet",
-    "slug": "aga-wallet",
+    "name": "AGA Wallet",
+    "slug": "wallet-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,23 +14,25 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "extra": {
-      "eas": {
-        "projectId": "737824dc-f014-4382-97ec-cf57a6ee91fc"
-      }
+    "ios": {
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.jayagaglobal2.agawallet",
+      "package": "com.alphagamingarcade.walletapp",
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true
     },
-    "ios": {
-      "bundleIdentifier": "com.jayagaglobal2.agawallet",
-      "supportsTablet": true
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4b08cae5-8a9b-4f99-8732-856d838e4483"
+      }
     },
     "plugins": [
       [

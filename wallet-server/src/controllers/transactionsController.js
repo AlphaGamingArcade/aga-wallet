@@ -7,7 +7,6 @@ const axios = require('axios')
 module.exports = class TransactionController {
     static sendTransaction = async (req, res) => {
         const { error } = sendTransactionSchema.validate(req.body)
-
         if (error) {
             return res.status(400).json({ message: 'Invalid transaction' })
         }
@@ -78,5 +77,15 @@ module.exports = class TransactionController {
         } catch (error) {
             return res.status(400).json({ message: error.message })
         }
+    }
+    static getTransactions = async (req, res) => {
+        const page = req.query.page || 1;
+        const limit = req.query.limit || 10;
+
+        return res.status(200).json({
+            page,
+            limit,
+            transactions: []
+        })
     }
 }

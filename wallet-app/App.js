@@ -1,4 +1,3 @@
-import LoadingScreen from './screens/loading';
 import { useFonts } from 'expo-font';
 import { NetworkAssetContextProvider } from './services/store/networkAssets/networkAssetsContext';
 import { WalletsContextProvider } from './services/store/wallets/walletsContext';

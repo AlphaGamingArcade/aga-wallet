@@ -12,6 +12,7 @@ import exhangeCurrencyIcon from '../../assets/exchange-currency-icon.png';
 import lockIconRed from '../../assets/lock-icon-red.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE } from '../../utils/app_constants';
 import TabHeader from '../../components/TabHeader';
+import Constants from 'expo-constants';
 
 export default function SettingsTab({ navigation }) {
   return (
@@ -44,7 +45,7 @@ export default function SettingsTab({ navigation }) {
         </View>
 
         <View style={styles.currenVersionContainer}>
-          <Text style={styles.currentVersionText}>Current version: 1.1.0</Text>
+          <Text style={styles.currentVersionText}>Current version: {Constants.expoConfig.version}</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

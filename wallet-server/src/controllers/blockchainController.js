@@ -81,6 +81,7 @@ module.exports = class blockchainController {
                         } received ${data.amount} of AGA Coin from ${
                             stxo ? stxo.address : ''
                         }`,
+                        channelId: "default"
                     }
                 }
             )

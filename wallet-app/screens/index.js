@@ -88,10 +88,8 @@ export default function IndexScreen() {
           push_notification_token: expoPushToken,
           platform: Platform.OS,
         });
-        alert('Registered for push notifications');
       } catch (error) {
         console.log(error);
-        alert('Register push token failed');
       }
     };
     if (expoPushToken && userState?.user?.id) {
