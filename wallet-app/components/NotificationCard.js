@@ -4,8 +4,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ReceiveIcon from '../assets/receive-icon-white.png';
 import UpdatesIcon from '../assets/notification-icon-white.png';
 import SendIcon from '../assets/send-icon-white.png';
-import { COLORS, FONT_FAMILY, FONT_SIZE } from '../utils/app_constants';
+import { COLORS, FONT_FAMILY, FONT_SIZE, FONT_WEIGHT } from '../utils/app_constants';
 import NotificationModal from './NotificationModal';
+import { getDate } from '../utils/formatter';
 
 const notificationInfo = {
   receive: {
@@ -19,8 +20,9 @@ const notificationInfo = {
   },
 };
 
-export default function Notification({ data }) {
+export default function NotificationCard({ data }) {
   const [isViewed, setIsViewed] = useState(data.is_viewed);
+
   const openModal = useRef(null);
 
   const clickOpenModal = () => {
@@ -32,7 +34,7 @@ export default function Notification({ data }) {
     openModal?.current?.close();
   };
 
-  const date = new Date(data.created_at).toLocaleDateString();
+  const date = getDate(data.created_at);
 
   return (
     <TouchableOpacity onPress={clickOpenModal}>
@@ -47,21 +49,15 @@ export default function Notification({ data }) {
             <Image source={notificationInfo[data.type].notificationImg} style={styles.optionIcon} />
           </LinearGradient>
           <View style={styles.notificationMessegeInfo}>
-            <Text style={styles.notificationMessege}>{data.type}</Text>
+            <Text style={[styles.notificationMessege, !isViewed && styles.active]}>
+              {data.type}
+            </Text>
           </View>
         </View>
-        <View style={styles.optionContainer}>
-          <TouchableOpacity style={styles.optionsButton}>
-            <Text>...</Text>
+        <View style={styles.mainOptionContainer}>
+          <TouchableOpacity>
+            <Text style={styles.optionsButton}>...</Text>
           </TouchableOpacity>
-          <View style={styles.optionSubContainer}>
-            <TouchableOpacity>
-              <Text style={styles.optionText}>Mark as read</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={styles.optionText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
         </View>
         <NotificationModal ref={openModal}>
           <Text style={styles.modalHeaderText}>Received Money</Text>
@@ -79,13 +75,14 @@ export default function Notification({ data }) {
 const styles = StyleSheet.create({
   container: {
     padding: 15,
-    backgroundColor: '#FFF',
+    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    height: 70,
     borderBottomWidth: 1,
     borderBottomColor: '#D9D9D9',
+    marginBottom: 5,
+    position: 'relative',
   },
   notificationContainer: {
     flexDirection: 'row',
@@ -111,25 +108,18 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY.POPPINS_REGULAR,
     fontSize: FONT_SIZE.REGULAR,
   },
-  optionContainer: {
-    position: 'relative',
-    marginLeft: 'auto',
-    overflow: 'visible',
-  },
   optionsButton: {
     fontSize: FONT_SIZE.LARGE + 10,
   },
-  optionSubContainer: {
-    position: 'absolute',
-    width: 100,
-    backgroundColor: COLORS.PRIMARY,
-    elevation: 5,
-    zIndex: 1,
-    marginLeft: -85,
-    marginTop: 20,
+  mainOptionContainer: {
+    position: 'relative',
   },
-  optionText: {
-    padding: 10,
+  subOptionContainer: {
+    position: 'absolute',
+    backgroundColor: 'red',
+    marginTop: 40,
+    marginLeft: -50,
+    width: 100,
   },
   modalHeaderText: {
     color: COLORS.PRIMARY,
@@ -158,5 +148,8 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY.POPPINS_REGULAR,
     fontSize: FONT_SIZE.REGULAR,
     color: COLORS.WHITE,
+  },
+  active: {
+    fontFamily: FONT_FAMILY.POPPINS_BOLD,
   },
 });

@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import IndexScreen from '../screens';
-import NotificationScreen from '../screens/notification-screen';
+import NotificationScreen from '../screens/notification';
 import SignInScreen from '../screens/signin';
 import PasscodeScreen from '../screens/passcode';
 import SignUpScreen from '../screens/signup';
