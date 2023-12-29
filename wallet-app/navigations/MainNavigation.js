@@ -1,5 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigation,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import IndexScreen from '../screens';
 import NotificationScreen from '../screens/notification-screen';
@@ -7,7 +11,6 @@ import SignInScreen from '../screens/signin';
 import PasscodeScreen from '../screens/passcode';
 import SignUpScreen from '../screens/signup';
 import { useAuth } from '../services/store/auth/AuthContext';
-import LoadingScreen from '../screens/loading';
 import SendAssetScreen from '../screens/send-asset';
 import SendStatusScreen from '../screens/send-status';
 import SendAmountScreen from '../screens/send-amount';
@@ -19,12 +22,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 const MainStack = createNativeStackNavigator();
 
 export default function MainNavigation({ onLoadLayout }) {
-  const { state, isAppAuthReady } = useAuth();
+  const { state: auth, isAppAuthReady } = useAuth();
+
+  if (!isAppAuthReady) {
+    return null;
+  }
+
   return (
     <NavigationContainer onReady={onLoadLayout}>
       <MainStack.Navigator screenOptions={{ headerShown: false }}>
-        {!isAppAuthReady && <MainStack.Screen name="loading" component={LoadingScreen} />}
-        {state.userToken == null ? (
+        {auth.userToken == null ? (
           <MainStack.Group>
             <MainStack.Screen
               options={{ animation: 'none' }}

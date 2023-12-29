@@ -27,7 +27,7 @@ import * as Clipboard from 'expo-clipboard';
 
 export default function WalletActionsCard({ navigation, wallet }) {
   const networkAssets = useNetworkAssets();
-  const { updateAsset,updateSender } = useSendAssetContext();
+  const { updateAsset, updateSender } = useSendAssetContext();
   const isOnSmallScreen = Dimensions.get('window').height < 675;
 
   const receiveBottomSheetModalRef = useRef(null);
@@ -43,7 +43,7 @@ export default function WalletActionsCard({ navigation, wallet }) {
   const onPressSeletAsset = (asset) => {
     sendBottomSheetModalRef.current?.close();
     updateSender(wallet?.wallet_address ?? '');
-    updateAsset(asset)
+    updateAsset(asset);
     navigation.push('send-asset');
   };
 

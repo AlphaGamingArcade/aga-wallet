@@ -80,7 +80,10 @@ const transactionItems = [
 
 export default function TransactionsTab({ navigation }) {
   return (
-    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "height" : ""} style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == 'ios' ? 'height' : ''}
+      style={styles.keyboardAvoidingView}
+    >
       <TabHeader title="Transactions" onPressBack={navigation.goBack} />
       <ScrollView
         scrollEventThrottle={16}

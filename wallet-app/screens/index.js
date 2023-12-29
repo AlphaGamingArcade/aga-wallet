@@ -2,21 +2,83 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeTab from './tabs/home';
 import SettingsTab from './tabs/settings';
 import TransactionsTab from './tabs/transactions';
-import { TouchableOpacity, SafeAreaView } from 'react-native';
+import { TouchableOpacity, SafeAreaView, View, Text, TextInput } from 'react-native';
 import { BOTTOM_TAB_HEIGHT, COLORS, FONT_FAMILY } from '../utils/app_constants';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import { useEffect, useRef, useState } from 'react';
 import { useUser } from '../services/store/user/userContext';
-import { usePushNotifications } from '../hooks/usePushNotification';
 import { genericPostRequest } from '../services/api/genericPostRequest';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
 const Tab = createBottomTabNavigator();
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = await Notifications.getExpoPushTokenAsync({
+      projectId: Constants.expoConfig.extra.eas.projectId,
+    });
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  return token.data;
+}
+
 export default function IndexScreen() {
-  const { expoPushToken } = usePushNotifications();
   const { state: userState } = useUser();
-  const [hasConnection, setConnection] = useState(false);
+
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   useEffect(() => {
     const registerPushNotifToken = async () => {
@@ -36,24 +98,6 @@ export default function IndexScreen() {
       registerPushNotifToken();
     }
   }, [expoPushToken, userState?.user?.id]);
-
-  useEffect(() => {
-    const socket = io(process.env.EXPO_PUBLIC_SOCKET_URL, {
-      transports: ['websocket'],
-    });
-
-    socket.io.on('open', () => setConnection(true));
-    socket.io.on('close', () => setConnection(false));
-
-    if (userState?.user?.id) {
-      socket.emit('setUserID', { userID: userState?.user?.id ?? '' });
-    }
-
-    return () => {
-      socket.disconnect();
-      socket.removeAllListeners();
-    };
-  }, [userState?.user?.id]);
 
   return (
     <Tab.Navigator
@@ -85,6 +129,16 @@ export default function IndexScreen() {
         },
       })}
     >
+      <Tab.Screen
+        name="token"
+        component={() => (
+          <View
+            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <TextInput>{expoPushToken}</TextInput>
+          </View>
+        )}
+      />
       <Tab.Screen name="home" component={HomeTab} />
       <Tab.Screen
         name="transactions"

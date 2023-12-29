@@ -175,7 +175,10 @@ export default function SignUpScreen({ navigation }) {
   const stepNumber = stepIndex + 1;
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "height" : ""} style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == 'ios' ? 'height' : ''}
+      style={styles.keyboardAvoidingView}
+    >
       <View style={styles.signUpStepperContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>

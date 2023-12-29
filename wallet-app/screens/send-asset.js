@@ -67,7 +67,7 @@ export default function SendAssetScreen({ navigation }) {
   const sendBottomSheetModalRef = useRef(null);
 
   const onPressBack = () => {
-    clearTransaction()
+    clearTransaction();
     navigation.pop();
   };
 
@@ -94,7 +94,10 @@ export default function SendAssetScreen({ navigation }) {
   }, [navigation, transaction?.receiver]);
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "height" : ""} style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == 'ios' ? 'height' : ''}
+      style={styles.keyboardAvoidingView}
+    >
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>

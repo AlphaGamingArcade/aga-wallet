@@ -1,7 +1,6 @@
 import LoadingScreen from './screens/loading';
 import { useFonts } from 'expo-font';
 import { NetworkAssetContextProvider } from './services/store/networkAssets/networkAssetsContext';
-import * as Notifications from 'expo-notifications';
 import { WalletsContextProvider } from './services/store/wallets/walletsContext';
 import { UserContextProvider } from './services/store/user/userContext';
 import { SendAssetContextProvider } from './services/store/sendAsset/sendAssetContext';
@@ -9,12 +8,6 @@ import { AuthContextProvider } from './services/store/auth/AuthContext';
 import MainNavigation from './navigations/MainNavigation';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
-
-Notifications.setNotificationHandler({
-  shouldPlaySound: true,
-  shouldShowAlert: true,
-  shouldShowBadge: true,
-});
 
 SplashScreen.preventAutoHideAsync();
 

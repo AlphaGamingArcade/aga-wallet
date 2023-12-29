@@ -100,7 +100,10 @@ export default function PasscodeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "height" : ""} style={styles.upperContainer}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS == 'ios' ? 'height' : ''}
+        style={styles.upperContainer}
+      >
         <Image style={styles.agaLogo} source={AgaLogoFull} />
         <View style={styles.passcodeContainer}>
           <Text style={styles.headerText}>AGA Wallet</Text>

@@ -21,7 +21,9 @@ import { useAuth } from '../services/store/auth/AuthContext';
 export default function SendAmountScreen({ navigation }) {
   const { transaction, updateAmount } = useSendAssetContext();
   const walletsContext = useWallets();
-  const { state: { userToken } } = useAuth();
+  const {
+    state: { userToken },
+  } = useAuth();
   const userBalance = walletsContext?.selectedWallet?.balance ?? 0;
   const [status, setStatus] = useState(APP_STATUS.IDLE);
 
@@ -50,7 +52,7 @@ export default function SendAmountScreen({ navigation }) {
   const onPressSend = async () => {
     try {
       setStatus(APP_STATUS.LOADING);
-      updateAmount(parseFloat(amount))
+      updateAmount(parseFloat(amount));
       await genericPostRequest(
         'transactions',
         {
@@ -76,7 +78,10 @@ export default function SendAmountScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "height" : ""} style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == 'ios' ? 'height' : ''}
+      style={styles.keyboardAvoidingView}
+    >
       <View style={styles.topNavigationContainer}>
         <TouchableOpacity style={styles.backBtn} onPress={onPressBack}>
           <Image source={ArrowLeftV2} style={styles.backIcon}></Image>
@@ -86,9 +91,7 @@ export default function SendAmountScreen({ navigation }) {
         <Text style={styles.headerText}>Send {transaction?.asset?.name} to</Text>
         <View style={styles.receiverAddressContainer}>
           <View style={styles.receiverAddressWrapper}>
-            <Text style={styles.receiverAddressText}>
-              {transaction?.receiver ?? ''}
-            </Text>
+            <Text style={styles.receiverAddressText}>{transaction?.receiver ?? ''}</Text>
           </View>
           <TouchableOpacity style={styles.changeAddressBtn} onPress={onPressChangeAddress}>
             <Text style={styles.changeText}>Change</Text>
@@ -144,7 +147,7 @@ export default function SendAmountScreen({ navigation }) {
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
-    backgroundColor: COLORS.WHITE
+    backgroundColor: COLORS.WHITE,
   },
   container: {
     flex: 1,
@@ -181,7 +184,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY.POPPINS_BOLD,
   },
   scrollView: {
-    flex: 1
+    flex: 1,
   },
   sendAssetContainer: {
     display: 'flex',
@@ -266,7 +269,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: 'auto',
     paddingBottom: 20,
-    marginTop: 'auto'
+    marginTop: 'auto',
   },
   sendButton: {
     display: 'flex',

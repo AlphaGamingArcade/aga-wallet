@@ -217,7 +217,7 @@ module.exports = class useController {
         }
 
         const { user_id: userId } = req.params
-
+        
         try {
             const isUserExists = await sqlFunction.isUserIdExists(userId)
             if (!isUserExists) {

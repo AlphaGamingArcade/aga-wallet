@@ -15,7 +15,10 @@ import TabHeader from '../../components/TabHeader';
 
 export default function SettingsTab({ navigation }) {
   return (
-    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "height" : ""} style={styles.keyboardAvoidingView}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == 'ios' ? 'height' : ''}
+      style={styles.keyboardAvoidingView}
+    >
       <TabHeader onPressBack={navigation.goBack} title="Settings" />
       <ScrollView
         scrollEventThrottle={16}

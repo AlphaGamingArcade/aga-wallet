@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import CheckImg from '../assets/check-icon.png';
 import ExImg from '../assets/ex-icon.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE, STATUS_TYPE } from '../utils/app_constants';
@@ -49,7 +43,9 @@ export default function SendStatusScreen({ route, navigation }) {
           style={styles.transactionImg}
         ></Image>
         <Text style={styles.transactionText}>
-          {transactionInfo[status].transactionText} <Text style={styles.amountText}>{transaction?.amount ?? 0}</Text> {transaction?.asset?.name ?? ''}
+          {transactionInfo[status].transactionText}{' '}
+          <Text style={styles.amountText}>{transaction?.amount ?? 0}</Text>{' '}
+          {transaction?.asset?.name ?? ''}
         </Text>
         <Text style={styles.toText}>to</Text>
         <Text style={styles.receiverText}>{transaction?.receiver ?? ''}</Text>
@@ -96,7 +92,7 @@ const styles = StyleSheet.create({
   },
   transactionImg: {
     width: 139,
-    height: 139
+    height: 139,
   },
   transactionText: {
     fontFamily: 'Poppins-Medium',
@@ -104,12 +100,12 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     paddingHorizontal: 30,
     textAlign: 'center',
-    paddingTop: 30
+    paddingTop: 30,
   },
   amountText: {
     fontFamily: FONT_FAMILY.POPPINS_SEMI_BOLD,
     fontSize: 26,
-    color: COLORS.PRIMARY
+    color: COLORS.PRIMARY,
   },
   toText: {
     color: '#838383',
@@ -193,7 +189,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 55,
     marginTop: 'auto',
-    marginBottom: 15
+    marginBottom: 15,
   },
   buttonText: {
     fontFamily: 'Poppins-SemiBold',
