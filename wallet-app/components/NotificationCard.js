@@ -58,10 +58,6 @@ export default function NotificationCard({ data }) {
           <TouchableOpacity>
             <Text style={styles.optionsButton}>...</Text>
           </TouchableOpacity>
-          <View style={styles.subOptionContainer}>
-            <Text>Delete</Text>
-            <Text>read</Text>
-          </View>
         </View>
         <NotificationModal ref={openModal}>
           <Text style={styles.modalHeaderText}>Received Money</Text>

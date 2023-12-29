@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -12,27 +12,18 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-
 import BackIcon from '../assets/arrow-left-v2.png';
 import { COLORS, FONT_FAMILY, FONT_SIZE } from '../utils/app_constants';
 import NotificationCard from '../components/NotificationCard';
 import { genericGetRequest } from '../services/api/genericGetRequest';
 import NotificationTab from '../components/NotificationTab';
+import NotificationContext from '../services/store/notificationAssets/notificationAssetsContext';
 
 export default function NotificationScreen({ navigation }) {
-  const [notifications, setNotifications] = useState([]);
+  const { notifications , fetchDatas } = useContext(NotificationContext);
+  
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
-
-  const fetchData = async (type) => {
-    try {
-      const response = await genericGetRequest(`users/notification?type=${type}`);
-      const data = await response.data;
-      setNotifications(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const tabNotifications = [
     notifications.filter((data) => data.type === 'send'),
@@ -71,7 +62,9 @@ export default function NotificationScreen({ navigation }) {
 
   const handleChangeTab = (newIndex) => {
     setIndex(newIndex);
-    console.log('hererer');
+    let type = ''
+    index == 0 ? type = 'SEND_ASSETS' : index == 1 ? type = 'RECEIVE_ASSETS' : type = 'UPDATE_ASSETS' ;
+    fetchDatas(type)
   };
 
   const handleBackButton = () => {
@@ -79,10 +72,9 @@ export default function NotificationScreen({ navigation }) {
   };
 
   useEffect(() => {
-    console.log('This isload')
-    fetchData('send');
-  }, [])
-  
+    console.log('This isload');
+    fetchDatas('send');
+  }, []);
 
   return (
     <View style={styles.container}>

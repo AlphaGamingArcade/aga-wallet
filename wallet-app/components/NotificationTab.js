@@ -13,8 +13,8 @@ export default function NotificationTab({ notifications }) {
         // onMomentumScrollEnd={handleLoadMore}
       >
         {notifications.map((notification) => {
-            return <NotificationCard key={notification.user_id} data={notification} />;
-          })}
+          return <NotificationCard key={notification.user_id} data={notification} />;
+        })}
       </ScrollView>
     </View>
   );
