@@ -400,7 +400,7 @@ module.exports = class sqlFunction {
                 .map((userId) => `'${userId}'`)
                 .join(', ')
             const result = await db.query(
-                `SELECT * FROM PUSH_TOKENS WHERE user_id in (${valuesString})`
+                `SELECT * FROM PUSH_TOKENS WHERE user_id in (${valuesString}) order by token_id desc`
             )
             const returnedArray = Object.values(result.recordset)
             return returnedArray
