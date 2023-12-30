@@ -18,19 +18,25 @@ import BarCodeScannerScreen from '../screens/bar-code-scanner';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { COLORS } from '../utils/app_constants';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNewUser } from '../services/store/newUser/NewUserContext';
+import OnboardingScreen from '../screens/onboarding';
 
 const MainStack = createNativeStackNavigator();
 
 export default function MainNavigation({ onLoadLayout }) {
   const { state: auth, isAppAuthReady } = useAuth();
+  const { state: newUser, isAppNewUserReady } = useNewUser();
 
-  if (!isAppAuthReady) {
+  if (!isAppAuthReady || !isAppNewUserReady) {
     return null;
   }
 
   return (
     <NavigationContainer onReady={onLoadLayout}>
       <MainStack.Navigator screenOptions={{ headerShown: false }}>
+        {newUser.isNew == null && (
+          <MainStack.Screen name='onboarding' component={OnboardingScreen}/>
+        )}
         {auth.userToken == null ? (
           <MainStack.Group>
             <MainStack.Screen

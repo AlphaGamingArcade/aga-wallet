@@ -20,8 +20,8 @@ import NotificationTab from '../components/NotificationTab';
 import NotificationContext from '../services/store/notificationAssets/notificationAssetsContext';
 
 export default function NotificationScreen({ navigation }) {
-  const { notifications , fetchDatas } = useContext(NotificationContext);
-  
+  const { notifications, fetchDatas } = useContext(NotificationContext);
+
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
 
@@ -62,9 +62,13 @@ export default function NotificationScreen({ navigation }) {
 
   const handleChangeTab = (newIndex) => {
     setIndex(newIndex);
-    let type = ''
-    index == 0 ? type = 'SEND_ASSETS' : index == 1 ? type = 'RECEIVE_ASSETS' : type = 'UPDATE_ASSETS' ;
-    fetchDatas(type)
+    let type = '';
+    index == 0
+      ? (type = 'SEND_ASSETS')
+      : index == 1
+      ? (type = 'RECEIVE_ASSETS')
+      : (type = 'UPDATE_ASSETS');
+    fetchDatas(type);
   };
 
   const handleBackButton = () => {

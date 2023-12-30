@@ -45,7 +45,9 @@ export default function SettingsTab({ navigation }) {
         </View>
 
         <View style={styles.currenVersionContainer}>
-          <Text style={styles.currentVersionText}>Current version: {Constants.expoConfig.version}</Text>
+          <Text style={styles.currentVersionText}>
+            Current version: {Constants.expoConfig.version}
+          </Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

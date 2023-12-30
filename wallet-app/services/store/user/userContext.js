@@ -10,25 +10,28 @@ export const UserContextProvider = ({ children }) => {
     removeItem: removeLocalStorageUser,
   } = useAsyncStorage('@AgaWallet_USER');
   const [isAppUserReady, setIsAppUserReady] = useState(false);
-  const [state, dispatch] = React.useReducer((prevState, action) => {
-    switch (action.type) {
-      case 'RESTORE_USER':
-        return {
-          ...prevState,
-          user: action.user,
-        };
-      case 'REGISTER_USER':
-        return {
-          ...prevState,
-          user: action.user,
-        };
-      case 'CLEAR_USER':
-        return {
-          ...prevState,
-          user: null,
-        };
-    }
-  });
+  const [state, dispatch] = React.useReducer(
+    (prevState, action) => {
+      switch (action.type) {
+        case 'RESTORE_USER':
+          return {
+            ...prevState,
+            user: action.user,
+          };
+        case 'REGISTER_USER':
+          return {
+            ...prevState,
+            user: action.user,
+          };
+        case 'CLEAR_USER':
+          return {
+            ...prevState,
+            user: null,
+          };
+      }
+    },
+    { user: null }
+  );
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place

@@ -8,6 +8,7 @@ import { NotificationProvider } from './services/store/notificationAssets/notifi
 import MainNavigation from './navigations/MainNavigation';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
+import { NewUserContext, NewUserContextProvider } from './services/store/newUser/NewUserContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,18 +33,20 @@ export default function App() {
   }
 
   return (
-    <AuthContextProvider>
-      <UserContextProvider>
-        <WalletsContextProvider>
-          <NetworkAssetContextProvider>
-            <NotificationProvider>
-              <SendAssetContextProvider>
-                <MainNavigation onLoadLayout={onLayoutRootView} />
-              </SendAssetContextProvider>
-            </NotificationProvider>
-          </NetworkAssetContextProvider>
-        </WalletsContextProvider>
-      </UserContextProvider>
-    </AuthContextProvider>
+    <NewUserContextProvider>
+      <AuthContextProvider>
+        <UserContextProvider>
+          <WalletsContextProvider>
+            <NetworkAssetContextProvider>
+              <NotificationProvider>
+                <SendAssetContextProvider>
+                  <MainNavigation onLoadLayout={onLayoutRootView} />
+                </SendAssetContextProvider>
+              </NotificationProvider>
+            </NetworkAssetContextProvider>
+          </WalletsContextProvider>
+        </UserContextProvider>
+      </AuthContextProvider>
+    </NewUserContextProvider>
   );
 }
