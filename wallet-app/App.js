@@ -4,6 +4,7 @@ import { WalletsContextProvider } from './services/store/wallets/walletsContext'
 import { UserContextProvider } from './services/store/user/userContext';
 import { SendAssetContextProvider } from './services/store/sendAsset/sendAssetContext';
 import { AuthContextProvider } from './services/store/auth/AuthContext';
+import { NotificationProvider } from './services/store/notificationAssets/notificationAssetsContext';
 import MainNavigation from './navigations/MainNavigation';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
@@ -35,9 +36,11 @@ export default function App() {
       <UserContextProvider>
         <WalletsContextProvider>
           <NetworkAssetContextProvider>
-            <SendAssetContextProvider>
-              <MainNavigation onLoadLayout={onLayoutRootView} />
-            </SendAssetContextProvider>
+            <NotificationProvider>
+              <SendAssetContextProvider>
+                <MainNavigation onLoadLayout={onLayoutRootView} />
+              </SendAssetContextProvider>
+            </NotificationProvider>
           </NetworkAssetContextProvider>
         </WalletsContextProvider>
       </UserContextProvider>
